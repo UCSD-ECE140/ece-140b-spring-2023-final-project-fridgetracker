@@ -8,8 +8,6 @@ The FridgeTracker is a device that sticks to your fridge like a magnet and keeps
 
 ## Links to Iri Kumi Videos
 
-[Playlist of all videos, including Lightning Rounds](https://youtube.com/playlist?list=PLaKXIi5VEO9pIqW9GB4_uan7wKJS5eATq)
-
 ## Updates
 
 ### Sprint #2
