@@ -7,6 +7,9 @@ The FridgeTracker is a device that sticks to your fridge like a magnet and keeps
 - Kirsten Nino
 
 ## Links to Iri Kumi Videos
+| [Week 1 - MVP Overview](https://www.youtube.com/watch?v=KZruzixlRfA) 
+| [Week 2 - KANO Model](https://www.youtube.com/watch?v=Jd1Xx1nVHN8) 
+| [Week 3 - TBD]()
 
 ## Updates
 
