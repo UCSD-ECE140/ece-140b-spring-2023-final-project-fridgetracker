@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="icon" href="./as.png">
+  <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>ViewRecipe</title>
+  <link rel="stylesheet" href="./ViewRecipe_files/viewrecipe.css">
+  <script src="utils\utils.js" defer></script>
+ 
+</head>
+<body>
+<div class="viewrecipe">
+  <form>
+    <input class="tiltle" value="" name="name">
+
+    <div class="item">
+      <div class="group1">
+        <p class="itemtext">Product Name</p>
+        <input type ="text" class="dateAdded" value="dateAdded" >
+        <input type ="text" class="dateAdded" value="expire date" >
+      </div>
+    </div>
+    <div class="grocery-list">
+      <!-- append elements here -->
+    </div>
+  </form >
+  <p id="demo"></p>
+  <div class="group6">
+    <button class="add" style="background-color: transparent; border-width:0rem" onclick="window.location.href='./CreateRecipe.html'">
+      <img class="delete" src="./ViewRecipe_files/add.png"></button>
+      <button class="deleteButton" style="background-color: transparent; border-width:0rem">
+     <img class="delete" src="./ViewRecipe_files/delete.png"></button>
+  </div>
+  <button class="backtorecipe" onclick="window.location.href='./HomeScreen.html'">Back to Main</button>
+</div>
+<script>
+  // retrieve list parameter from URL query string
+  const urlParams = new URLSearchParams(window.location.search);
+  const listParam = urlParams.get('list');
+  const nameInput = document.querySelector('.tiltle');
+  nameInput.value = listParam;
+  if(listParam == "All"){
+    const listData = JSON.parse(localStorage.getItem());
+  }
+  else{
+  // retrieve data from localStorage based on list parameter
+   const listData = JSON.parse(localStorage.getItem(listParam) || '[]');
+  }
+  // append data to grocery-list div
+  if( listParam == 'ShoppingListS'){
+    const groceryListDiv = document.querySelector('.grocery-list');
+    listData.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'item';
+      const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'itemCheckbox';
+      const group1Div = document.createElement('div');
+      group1Div.className = 'group1';
+      const productP = document.createElement('p');
+      productP.className = 'itemtext';
+      productP.textContent = item.name;
+      const dateAddedInput = document.createElement('input');
+      dateAddedInput.type = 'date';
+      dateAddedInput.className = 'dateAdded';
+      dateAddedInput.value = item.dateAdded;
+      group1Div.appendChild(checkbox);
+      group1Div.appendChild(productP);
+      group1Div.appendChild(dateAddedInput);
+      div.appendChild(group1Div);
+      groceryListDiv.appendChild(div);
+    });
+  }
+  else{
+  const groceryListDiv = document.querySelector('.grocery-list');
+  listData.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'itemCheckbox';
+    const group1Div = document.createElement('div');
+    group1Div.className = 'group1';
+    const productP = document.createElement('p');
+    productP.className = 'itemtext';
+    productP.textContent = item.name;
+    const dateAddedInput = document.createElement('input');
+    dateAddedInput.type = 'date';
+    dateAddedInput.className = 'dateAdded';
+    dateAddedInput.value = item.dateAdded;
+    const dateExpireInput = document.createElement('input');
+    dateExpireInput.type = 'date';
+    dateExpireInput.className = 'dateExpire';
+    dateExpireInput.value = item.dateExpire;
+    group1Div.appendChild(checkbox);
+    group1Div.appendChild(productP);
+    group1Div.appendChild(dateAddedInput);
+    group1Div.appendChild(dateExpireInput);
+    div.appendChild(group1Div);
+    groceryListDiv.appendChild(div);
+});
+}
+  const deleteButton = document.querySelector('.deleteButton');
+  deleteButton.addEventListener('click', () => {
+    const checkboxes = document.querySelectorAll('.itemCheckbox');
+    checkboxes.forEach((checkbox, index) => {
+        if (checkbox.checked) {
+            listData.splice(index, 1);
+        }
+    });
+    localStorage.setItem(listParam, JSON.stringify(listData));
+    window.location.reload();
+  });
+
+</script>
+
+</body>
+</html>
