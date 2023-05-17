@@ -8,7 +8,7 @@ from datetime import datetime                     # to provide time and date
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 # Configuration - TODO: figure out how pi will access credentials?
-load_dotenv('public/credentials.env')             # Read in the environment variables for MySQL
+load_dotenv('credentials.env')             # Read in the environment variables for MySQL
 db_config = {
   "host": os.environ['MYSQL_HOST'],
   "user": os.environ['MYSQL_USER'],
@@ -38,11 +38,31 @@ def init_kitchen(kitchen_id:int) -> int:
 # User login (authentification)
 # TODO: sessions?
 
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 # Kitchen access (authorization)
+# TODO: authorize the user before doing so.
+# currently running on a local server with test kitchen so not implemented yet
+
 # CREATE category (Fridge, freezer, pantry, counter, etc.)
-    # create food item may be called iteratively for reciept implementation in the future
-# SELECT category
-# UPDATE category
-# DELETE
+def create_category(kitchen_id:int, section:str) -> bool:
+  return False
+
+# SELECT category - for accessing lists
+# UPDATE category - for renaming categories...
+# DELETE category - delete a category and all the food items...
+
+def add_item(section:str, item:str, added, expiry) -> int:
+  db = mysql.connect(**db_config)
+  cursor = db.cursor()
+
+  # TODO: accept specific kitchen names, needed after authentification
+  query = "insert into kitchen_12345678 (section, item, added, expiry) values (%s, %s, %s, %s)"
+  values = (section, item, added, expiry)
+  cursor.execute(query,values)
+  db.commit()
+  db.close()
+  return cursor.lastrowid
+
 
 # crud operations, reuse for dealing with users/categories/food items? ie pass latter in as arg
