@@ -21,6 +21,19 @@ db_config = {
 
 # User registration
 # CREATE user (user and kitchen profile (if setup))
+def create_user(first_name:str, last_name:str, email:str, user:str, pwd:str, kitchen_id:int, user_role:int) -> int:
+  pwd_encoded = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
+  db = mysql.connect(**db_config)
+  cursor = db.cursor()
+  query = "insert into User_Registry (first_name, last_name, email, user, pwd, kitchen_id, user_role) values (%s, %s, %s, %s, %s, %s, %s, %s)"
+  values = (first_name, last_name, email, user, pwd_encoded, kitchen_id, user_role)
+  cursor.execute(query, values)
+  db.commit()
+  db.close()
+  return cursor.lastrowid
+
+def init_kitchen(kitchen_id:int) -> int:
+  kitchen_id
 
 # User login (authentification)
 # TODO: sessions?

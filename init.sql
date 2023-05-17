@@ -23,6 +23,6 @@ CREATE TABLE Kitchen_12345678 (
     added         timestamp NOT NULL,
     expiry        timestamp NOT NULL,
     -- optional data:
-    shared        BOOL NULL,
-    user_access   -- make this an array of user_role
+    shared        BOOL NULL--,
+    --user_access   -- make this an array of user_role
 );
