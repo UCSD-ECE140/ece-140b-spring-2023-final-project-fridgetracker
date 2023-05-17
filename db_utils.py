@@ -49,9 +49,21 @@ def create_category(kitchen_id:int, section:str) -> bool:
   return False
 
 # SELECT category - for accessing lists
+def get_category(kitchen_id:int, section:str) -> list:
+  db = mysql.connect(**db_config)
+  cursor = db.cursor()
+  if kitchen_id == None:
+    result = []
+  else:
+    query = f"select * from kitchen_{kitchen_id} where section={section};"
+    cursor.execute(query)
+    result = cursor.fetchall()
+  return result # result should contain section, item, added, expiry
+
 # UPDATE category - for renaming categories...
 # DELETE category - delete a category and all the food items...
 
+# TODO: verify timestamps from server -> db
 def add_item(section:str, item:str, added, expiry) -> int:
   db = mysql.connect(**db_config)
   cursor = db.cursor()
