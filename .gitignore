@@ -1,3 +1,4 @@
+# hide cache
 __pycache__
 # hide credentials
 *.env
