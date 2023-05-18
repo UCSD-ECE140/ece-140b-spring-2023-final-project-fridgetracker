@@ -1,10 +1,15 @@
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+# db_utils.py
+# helper functions for server to interact with database
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 # Necessary Imports
 import mysql.connector as mysql                   # Used for interacting with the MySQL database
 import os                                         # Used for interacting with the system environment
 from dotenv import load_dotenv                    # Used to read the credentials
-import bcrypt
+import bcrypt                                     # to encrypt/decrpyt passwords
 from datetime import datetime                     # to provide time and date
+from pydantic import BaseModel                    # to accept Items from server
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 # Configuration - TODO: figure out how pi will access credentials?
@@ -15,6 +20,14 @@ db_config = {
   "password": os.environ['MYSQL_PASSWORD'],
   "database": os.environ['MYSQL_DATABASE']
 }
+
+# Define a Pydantic model for the item data
+class Item(BaseModel):
+    listTage: str
+    itemName: str
+    addedDate: str
+    expierdDate: str
+
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 # define helper functions for CRUD operations
 # CREATE, SELECT, UPDATE, DELETE
@@ -32,32 +45,45 @@ def create_user(first_name:str, last_name:str, email:str, user:str, pwd:str, kit
   db.close()
   return cursor.lastrowid
 
+# initialize kitchen with first user signup
 def init_kitchen(kitchen_id:int) -> int:
-  kitchen_id
+  return False
 
 # User login (authentification)
-# TODO: sessions?
+# TODO: sessions
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 # Kitchen access (authorization)
 # TODO: authorize the user before doing so.
+def verify_user(user:int, kitchen_id:int) -> bool:
+  db = mysql.connect(**db_config)
+  cursor = db.cursor()
+  # query = f"select * from "
+  db.close()
+  return True if cursor.rowcount == 1 else False
+
 # currently running on a local server with test kitchen so not implemented yet
 
-# CREATE category (Fridge, freezer, pantry, counter, etc.)
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+# CREATE category (Fridge, freezer, pantry, counter, etc.) -- TODO: determine if still needed
 def create_category(kitchen_id:int, section:str) -> bool:
   return False
 
 # SELECT category - for accessing lists
-def get_category(kitchen_id:int, section:str) -> list:
+# def get_category(kitchen_id:int, section:str) -> list:
+def get_category(section:str) -> list:
   db = mysql.connect(**db_config)
   cursor = db.cursor()
-  if kitchen_id == None:
-    result = []
-  else:
-    query = f"select * from kitchen_{kitchen_id} where section={section};"
-    cursor.execute(query)
-    result = cursor.fetchall()
+  # if kitchen_id == None:
+  #   result = []
+  # else:
+    # query = f"select * from kitchen_{kitchen_id} where section={section};"
+  result = []
+  query = f"select * from kitchen01 where section={section}"
+  cursor.execute(query)
+  result = cursor.fetchall()
+  db.close()
   return result # result should contain section, item, added, expiry
 
 # UPDATE category - for renaming categories...
@@ -68,13 +94,19 @@ def add_item(section:str, item:str, added, expiry) -> int:
   db = mysql.connect(**db_config)
   cursor = db.cursor()
 
-  # TODO: accept specific kitchen names, needed after authentification
-  query = "insert into kitchen_12345678 (section, item, added, expiry) values (%s, %s, %s, %s)"
+  # TODO: accept specific kitchen names, needed after authentification -- currently using sample
+  query = "insert into kitchen01 (section, item, added, expiry) values (%s, %s, %s, %s)"
   values = (section, item, added, expiry)
   cursor.execute(query,values)
   db.commit()
   db.close()
   return cursor.lastrowid
 
-
-# crud operations, reuse for dealing with users/categories/food items? ie pass latter in as arg
+# DELETE item
+def delete_item(item:str) -> bool:
+  db = mysql.connect(**db_config)
+  cursor = db.cursor()
+  cursor.execute(f"delete from kitchen01 where item={item};")
+  db.commit()
+  db.close()
+  return True if cursor.rowcount == 1 else False

@@ -36,8 +36,9 @@ cursor.execute("DROP TABLE IF EXISTS kitchen01;")
 try:
     cursor.execute("""
     CREATE TABLE kitchen01 (
-        section       VARCHAR(16) NOT NULL,
+        item_id integer AUTO_INCREMENT PRIMARY KEY,
         item          VARCHAR(16) NOT NULL,
+        section       VARCHAR(16) NOT NULL,
         added         timestamp NOT NULL,
         expiry        timestamp NOT NULL
     );
