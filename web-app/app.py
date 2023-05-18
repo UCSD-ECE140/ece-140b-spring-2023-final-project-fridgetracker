@@ -1,14 +1,20 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import mysql.connector
+from dotenv import load_dotenv
+import os
+
+# load credentials for connection to database
+load_dotenv("../credentials.env")
+db_config = {
+    "host" : os.environ['MYSQL_HOST'],
+    "user" : os.environ['MYSQL_USER'],
+    "password" : os.environ['MYSQL_PASSWORD'],
+    "database" : os.environ['MYSQL_DATABASE']
+}
 
 # Establish connection to the MySQL database
-conn = mysql.connector.connect(
-    host="your_host",
-    user="your_username",
-    password="your_password",
-    database="your_database"
-)
+conn = mysql.connector.connect(**db_config)
 
 # Create a FastAPI application
 app = FastAPI()

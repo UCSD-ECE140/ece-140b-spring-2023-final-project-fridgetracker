@@ -102,7 +102,7 @@ body {
   border-radius: 0.8rem;
   flex-shrink: 0;
 }
-.viewrecipe .item .group1 .dateexpire {
+.viewrecipe .item .group1 .dateExpire {
   width: 11.2rem;
   height: 100%;
   text-align: center;
@@ -194,7 +194,7 @@ body {
   flex-shrink: 0;
 }
 form{
-  height: 40rem;
+  /* height: ; */
 }
 
 
