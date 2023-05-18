@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import mysql.connector
 from dotenv import load_dotenv
 import os
+import db_utils as db
 
 # load credentials for connection to database
 load_dotenv("../credentials.env")
