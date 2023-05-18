@@ -27,6 +27,7 @@
       <!-- append elements here -->
     </div>
   </form >
+  <form></form>
   <p id="demo"></p>
   <div class="group6">
     <button class="add" style="background-color: transparent; border-width:0rem" onclick="window.location.href='./CreateRecipe.html'">
@@ -42,12 +43,21 @@
   const listParam = urlParams.get('list');
   const nameInput = document.querySelector('.tiltle');
   nameInput.value = listParam;
+  let listData = [];
   if(listParam == "All"){
-    const listData = JSON.parse(localStorage.getItem());
+    const fridgeListData = JSON.parse(localStorage.getItem("FridgeListS") || '[]');
+    const counterItemListData = JSON.parse(localStorage.getItem("CounterItemS") || '[]');
+    const pantryItemListData = JSON.parse(localStorage.getItem("PentryItemS") || '[]');
+    const shoppingListData = JSON.parse(localStorage.getItem("ShoppingListS") || '[]');
+    listData = listData.concat(fridgeListData, counterItemListData, pantryItemListData, shoppingListData);
+    //listData.push(...fridgeListData, ...counterItemListData, ...pantryItemListData, ...shoppingListData);
+    //console.log(listData);
   }
   else{
   // retrieve data from localStorage based on list parameter
-   const listData = JSON.parse(localStorage.getItem(listParam) || '[]');
+   listData = JSON.parse(localStorage.getItem(listParam) || '[]');
+   //console.log(listData);
+
   }
   // append data to grocery-list div
   if( listParam == 'ShoppingListS'){
@@ -103,17 +113,69 @@
     groceryListDiv.appendChild(div);
 });
 }
-  const deleteButton = document.querySelector('.deleteButton');
-  deleteButton.addEventListener('click', () => {
-    const checkboxes = document.querySelectorAll('.itemCheckbox');
-    checkboxes.forEach((checkbox, index) => {
-        if (checkbox.checked) {
-            listData.splice(index, 1);
-        }
-    });
-    localStorage.setItem(listParam, JSON.stringify(listData));
-    window.location.reload();
+const deleteButton = document.querySelector('.deleteButton');
+deleteButton.addEventListener('click', () => {
+  const checkboxes = document.querySelectorAll('.itemCheckbox');
+  const checkedItems = [];
+
+  checkboxes.forEach((checkbox, index) => {
+    if (checkbox.checked) {
+      checkedItems.push(index);
+    }
   });
+
+  if (listParam === 'All') {
+    // Delete items from individual lists
+    const fridgeListData = JSON.parse(localStorage.getItem('FridgeListS') || '[]');
+    const counterItemListData = JSON.parse(localStorage.getItem('CounterItemS') || '[]');
+    const pantryItemListData = JSON.parse(localStorage.getItem('PentryItemS') || '[]');
+    const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
+
+    const deletedItems = [];
+
+    checkedItems.forEach((index) => {
+      if (index < fridgeListData.length) {
+        fridgeListData.splice(index - deletedItems.length, 1);
+        deletedItems.push('FridgeListS');
+      } else if (index < fridgeListData.length + counterItemListData.length) {
+        counterItemListData.splice(index - fridgeListData.length - deletedItems.length, 1);
+        deletedItems.push('CounterItemS');
+      } else if (index < fridgeListData.length + counterItemListData.length + pantryItemListData.length) {
+        pantryItemListData.splice(index - fridgeListData.length - counterItemListData.length - deletedItems.length, 1);
+        deletedItems.push('PentryItemS');
+      } else {
+        shoppingListData.splice(index - fridgeListData.length - counterItemListData.length - pantryItemListData.length - deletedItems.length, 1);
+        deletedItems.push('ShoppingListS');
+      }
+    });
+
+    localStorage.setItem('FridgeListS', JSON.stringify(fridgeListData));
+    localStorage.setItem('CounterItemS', JSON.stringify(counterItemListData));
+    localStorage.setItem('PentryItemS', JSON.stringify(pantryItemListData));
+    localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
+
+    deletedItems.forEach((list) => {
+      const listData = document.querySelector('.grocery-list[data-list="' + list + '"]');
+      if (listData) {
+        listData.innerHTML = '';
+      }
+    });
+  } else {
+    // Delete items from the selected list
+    checkedItems.forEach((index) => {
+      listData.splice(index, 1);
+    });
+
+    localStorage.setItem(listParam, JSON.stringify(listData));
+
+    const listDataElement = document.querySelector('.grocery-list[data-list="' + listParam + '"]');
+    if (listDataElement) {
+      listDataElement.innerHTML = '';
+    }
+  }
+
+  window.location.reload();
+});
 
 </script>
 
