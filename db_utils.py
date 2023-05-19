@@ -80,17 +80,17 @@ def get_category(section:str) -> list:
   # else:
     # query = f"select * from kitchen_{kitchen_id} where section={section};"
   result = []
-  query = f"select * from kitchen01 where section={section}"
+  query = f"select (item, added, expiry) from kitchen01 where section={section}"
   cursor.execute(query)
   result = cursor.fetchall()
   db.close()
-  return result # result should contain section, item, added, expiry
+  return result # result contains item, added, expiry
 
 # UPDATE category - for renaming categories...
 # DELETE category - delete a category and all the food items...
 
 # TODO: verify timestamps from server -> db
-def add_item(section:str, item:str, added, expiry) -> int:
+def add_item(section:str, item:str, added:str, expiry:str) -> int:
   db = mysql.connect(**db_config)
   cursor = db.cursor()
 
@@ -100,7 +100,7 @@ def add_item(section:str, item:str, added, expiry) -> int:
   cursor.execute(query,values)
   db.commit()
   db.close()
-  return cursor.lastrowid
+  return cursor.lastrowid # return item_id
 
 # DELETE item
 def delete_item(item:str) -> bool:
