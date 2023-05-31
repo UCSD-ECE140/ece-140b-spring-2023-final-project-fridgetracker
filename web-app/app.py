@@ -27,48 +27,36 @@ class Item(BaseModel):
     addedDate: str
     expierdDate: str
 
-# Add item to the database
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+# kitchen routes
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+# add item to kitchen
 @app.post('/add_item')
-def add_item(item: Item):
-    cursor = conn.cursor()
-    insert_query = """
-        INSERT INTO items (listTage, itemName, addedDate, expierdDate)
-        VALUES (%s, %s, %s, %s)
-    """
-    values = (item.listTage, item.itemName, item.addedDate, item.expierdDate)
-    cursor.execute(insert_query, values)
-    conn.commit()
-    cursor.close()
-    return {'message': 'Item added successfully'}
+def add_item(item:Item):
+    if (db.add_item(item.listTage, item.itemName, item.addedDate, item.expierdDate)):
+        return {'message': 'Item added successfully'}
+    return {'message': 'Item not added!'}
 
-# Remove item from the database
-@app.post('/remove_item')
-def remove_item(item_id: int):
-    cursor = conn.cursor()
-    delete_query = "DELETE FROM items WHERE id = %s"
-    cursor.execute(delete_query, (item_id,))
-    if cursor.rowcount == 0:
-        raise HTTPException(status_code=404, detail='Item not found')
-    conn.commit()
-    cursor.close()
-    return {'message': 'Item removed successfully'}
+# get all items in list
+@app.get('/get_{category}_list')
+def get_category_list(category:str) -> list:
+    data = db.get_category(category)
+    if (data != []):
+        return data
+    
+# delete an item by name
+@app.delete('/delete_item')
+def delete_item(item:Item):
+    if (db.delete_item(item.listTage)):
+        return {'message': 'Item deleted.'}
+    return {'message': 'Item not deleted!'} 
 
-# Update item in the database
-@app.put('/update_item/{item_id}')
-def update_item(item_id: int, item: Item):
-    cursor = conn.cursor()
-    update_query = """
-        UPDATE items
-        SET listTage = %s, itemName = %s, addedDate = %s, expierdDate = %s
-        WHERE id = %s
-    """
-    values = (item.listTage, item.itemName, item.addedDate, item.expierdDate, item_id)
-    cursor.execute(update_query, values)
-    if cursor.rowcount == 0:
-        raise HTTPException(status_code=404, detail='Item not found')
-    conn.commit()
-    cursor.close()
-    return {'message': 'Item updated successfully'}
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+# Login/Registration
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
 
 # Run the FastAPI application
 if __name__ == '__main__':
