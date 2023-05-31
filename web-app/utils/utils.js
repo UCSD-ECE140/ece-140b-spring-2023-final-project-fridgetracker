@@ -1,3 +1,21 @@
+// request function for handling interactions with the server
+function server_request(url, data = {}, verb, callback) {
+  return fetch(url, {
+      credentials: 'same-origin',
+      method: verb,
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+  })
+      .then(response => response.json())
+      .then(response => {
+          if (callback)
+              callback(response);
+      })
+      .catch(error => console.error('Error:', error));
+}
+
+
+// add items to local storage -- TODO: connect to db using server routes
 function addItem() {
     // Get values entered in form
     const name = document.querySelector('input[name="ProductBrand"]').value;
@@ -17,3 +35,4 @@ function addItem() {
     // Redirect to HomeScreen.html
     window.location.href = './HomeScreen.html';
   }
+  

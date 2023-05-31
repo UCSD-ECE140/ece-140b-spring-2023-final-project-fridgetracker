@@ -18,28 +18,28 @@
     <img class="fridgelogo" src="./as.png">
   </div>
   <div class="group1">
-    <button class="AddHave" onclick="window.location.href='./CreateRecipe.html'">Have</button>
-    <button class="AddAll" onclick="window.location.href='./ViewRecipe.html?list=All'">All</button>
+    <button class="AddHave" onclick="window.location.href='./CreateRecipe.html'">Add Item</button>
+    <button class="AddAll" onclick="window.location.href='./ViewRecipe.html?list=All'">View All Items</button>
   </div>
-  <button class="FridgeList" onclick="window.location.href='./ViewRecipe.html?list=FridgeListS'">FridgeList</button>
+  <button class="FridgeList" onclick="window.location.href='./ViewRecipe.html?list=FridgeListS'">Fridge</button>
   <div class="line1">
   </div>
   <div class = "FridgeListS">
     <!-- append elements -->
   </div>  
-  <button class="CounterItem" onclick="window.location.href='./ViewRecipe.html?list=CounterItemS'">CounterItem</button>
+  <button class="CounterItem" onclick="window.location.href='./ViewRecipe.html?list=CounterItemS'">Counter</button>
   <div class="line2">
   </div>
   <div class = "CounterItemS">
     <!-- append elements -->
   </div>  
-  <button class="PentryItem" onclick="window.location.href='./ViewRecipe.html?list=PentryItemS'">PentryItem</button>
+  <button class="PentryItem" onclick="window.location.href='./ViewRecipe.html?list=PentryItemS'">Pantry</button>
   <div class="line3">
   </div>
   <div class = "PentryItemS">
     <!-- append elements -->
   </div>  
-  <button class="ShoppingList" onclick="window.location.href='./ViewRecipe.html?list=ShoppingListS'">Add to Shopping List</button>
+  <button class="ShoppingList" onclick="window.location.href='./ViewRecipe.html?list=ShoppingListS'">Shopping List</button>
   <div class="line4">
   </div>
   <div class = "ShoppingListS">
@@ -48,7 +48,7 @@
   
 </div>
 <script>
-  // retrieve data from localStorage
+  // retrieve data from localStorage -- TODO: retrieve from db instead
   const fridgeList = JSON.parse(localStorage.getItem('FridgeListS') || '[]');
   const counterItems = JSON.parse(localStorage.getItem('CounterItemS') || '[]');
   const pentryItems = JSON.parse(localStorage.getItem('PentryItemS') || '[]');
