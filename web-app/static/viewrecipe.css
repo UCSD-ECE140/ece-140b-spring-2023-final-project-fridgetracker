@@ -146,7 +146,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--fridge-medium);
+  background-color: transparent;
   border-radius: 2.4rem;
   flex-shrink: 0;
 }
@@ -174,7 +174,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--fridge-light);
+  /* background-color: var(--fridge-light); */
+  background-color: transparent;
+
   border-radius: 2.4rem;
   flex-shrink: 0;
 }
