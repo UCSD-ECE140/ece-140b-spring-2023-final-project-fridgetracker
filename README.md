@@ -16,6 +16,9 @@ The FridgeTracker is a device that sticks to your fridge like a magnet and keeps
 | [Week 7 - Accessibility](https://youtu.be/4Ut6ZUDoYEk)
 | [Week 8 - Final Iri Kumi]()
 
+## Documentation
+(write simple documentation for backend, frontend, and hardware.)
+
 ## Updates
 
 ### Sprint #2
