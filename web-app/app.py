@@ -36,14 +36,19 @@ class Item(BaseModel):
 
 # load homepage
 @app.get("/", response_class=HTMLResponse)
-def get_html() -> HTMLResponse:
+def get_homescreen() -> HTMLResponse:
     with open("HomeScreen.html") as html:
         return HTMLResponse(content=html.read())
     
-# view individual list pages
-@app.get("/", response_class=HTMLResponse)
-def get_html() -> HTMLResponse:
+# TODO: 
+@app.get("/view_recipe", response_class=HTMLResponse)
+def get_viewrecipe() -> HTMLResponse:
     with open("ViewRecipe.html") as html:
+        return HTMLResponse(content=html.read())
+    
+@app.get("/create_recipe", response_class=HTMLResponse)
+def get_createrecipe() -> HTMLResponse:
+    with open("CreateRecipe.html") as html:
         return HTMLResponse(content=html.read())
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''

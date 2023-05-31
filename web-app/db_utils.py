@@ -10,7 +10,7 @@ from dotenv import load_dotenv                    # Used to read the credentials
 import bcrypt                                     # to encrypt/decrpyt passwords
 from datetime import datetime                     # to provide time and date
 from pydantic import BaseModel                    # to accept Items from server
-from flask import session
+# from flask import session
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 # Configuration - TODO: figure out how pi will access credentials?
 load_dotenv('credentials.env')             # Read in the environment variables for MySQL

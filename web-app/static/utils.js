@@ -51,4 +51,14 @@ function addItem() {
   
     // Redirect to HomeScreen.html
     window.location.href = './HomeScreen.html';
-  }
+}
+
+// display items
+function display_items(categoryDiv){
+  categoryDiv.forEach(item => {
+    const div = document.createElement('div');
+    // div.classList.add('PentryListItem');
+    div.textContent = `${item.name}, Added: ${item.dateAdded}, Expiry: ${item.dateExpire}`;
+    categoryDiv.appendChild(div);
+  })
+}
