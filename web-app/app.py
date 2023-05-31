@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import mysql.connector
 from dotenv import load_dotenv
-import os
+import os, bcrypt
 import db_utils as db
 
 # load credentials for connection to database
@@ -57,6 +57,17 @@ def delete_item(item:Item):
 # Login/Registration
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+# register a new user - TODO: logic for individual users in household group
+@app.post('/register_user')
+def register_user(first_name:str, last_name:str, email:str, user:str, pwd:str, kitchen_id:int, user_role:int):
+    # encrypt password here in server
+    pwd = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
+    if (db.create_user(first_name, last_name, email, user, pwd, kitchen_id, user_role)):
+        return {'message': 'User registered.'}
+    return {'message': 'User not registered!'} 
+
+# TODO: login user
+# @app.post('/login_user')
 
 # Run the FastAPI application
 if __name__ == '__main__':
