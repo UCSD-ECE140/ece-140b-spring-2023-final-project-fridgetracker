@@ -111,8 +111,8 @@ form {
   height: 90%;
 }
 .createrecipe .group7 {
-  margin: 0rem 3.2rem 2.4rem 3.8rem;
-  width: calc(100% - 7rem);
+  margin: 0rem 0rem 2rem 0rem;
+  width: calc(100% - 10rem);
   height: 4.9rem;
   display: flex;
   align-items: center;
@@ -138,6 +138,7 @@ form {
   flex-shrink: 0;
 }
 .createrecipe .group7 .delete {
+  margin-right: 1.8rem;
   width: 4.9rem;
   height: 4.9rem;
   cursor: pointer;
@@ -146,7 +147,7 @@ form {
   flex-shrink: 0;
 }
 .createrecipe .backtotecipe {
-  margin: 0 2.9rem;
+  margin: 0 2rem;
   width: calc(100% - 5.8rem);
   height: 5.4rem;
   cursor: pointer;
@@ -166,8 +167,8 @@ form {
 }
 
 .backtorecipe {
-  margin: 0rem 2.5rem 0rem 3.8rem;
-  width: calc(100% - 3rem);
+  margin: 0rem 2.5rem 5rem 2rem;
+  width: calc(100% - 2rem);
   height: 5.4rem;
   cursor: pointer;
   text-align: center;
@@ -184,3 +185,22 @@ form {
   border-radius: 2.4rem;
   flex-shrink: 0;
 }
+.createrecipe .group7 .delete {
+  width: 4.9rem;
+  height: 4.9rem;
+  cursor: pointer;
+  object-fit: contain;
+  vertical-align: top;
+  flex-shrink: 0;
+}
+
+.createrecipe .group7 .camera {
+  width: 4.9rem;
+  height: 4.9rem;
+  cursor: pointer;
+  object-fit: contain;
+  vertical-align: top;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+

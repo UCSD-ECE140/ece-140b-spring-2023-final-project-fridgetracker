@@ -10,6 +10,19 @@
     <link rel="stylesheet" href="./static/createrecipe.css">
     <script src="./static/utils.js" defer></script>
     <script>
+        // Function to check the screen size and redirect if necessary
+        function checkScreenSize() {
+          var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+          var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+          
+          if (screenWidth <= 320 && screenHeight <= 240) {
+            window.location.href = 'small_screen.html'; // Redirect to the small screen HTML page
+          }
+        }
+  
+        // Call the function on page load
+        window.onload = checkScreenSize;
+      
       function openCamera() {
         // Code to open camera and scan the product
         // Retrieve the product name from an API
@@ -58,13 +71,14 @@
       <form class="just"></form>
       <div class="group1">
         <div class="group7">
+
           <button class="save" onclick="addItem()">Save</button>
           <button class="delete" onclick="window.location.href='./HomeScreen.html'" 
             style="background-color: transparent; border-width:0rem">
-            <img class="delete" src="./static/delete.png"></button>
-            <button class="delete" onclick="openCamera()" onclick="window.location.href='./cam.html'">
-              <img src="./static/camera.png" alt="Camera">
-            </button>
+            <img class="delete" src="./static/delete.png" style="background-color: transparent; border-width:0rem"></button>
+            <button class="camera"  onclick="window.location.href='./cam.html'">
+              <img class="camera" style="background-color: transparent; border-width:0rem" src="./static/camera.png" alt="Camera">
+            </button>             
         </div>
         <button class="backtorecipe" onclick="window.location.href='./HomeScreen.html'">Back to Main</button>
       </div>
