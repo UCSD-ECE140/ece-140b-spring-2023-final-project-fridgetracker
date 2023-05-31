@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles       # for serving static files
+from fastapi.templating import Jinja2Templates    # for generating HTML from templatized files
 from pydantic import BaseModel
 import mysql.connector
 from dotenv import load_dotenv
@@ -23,9 +24,8 @@ conn = mysql.connector.connect(**db_config)
 # Create a FastAPI application
 app = FastAPI()
 
-# Initialize Jinja2 templates
-templates = Jinja2Templates(directory="templates")
-
+app.mount("/static", StaticFiles(directory="static"), name="static")
+# views = Jinja2Templates(directory='views')        # specify where the HTML files are located
 
 # Define a Pydantic model for the item data
 class Item(BaseModel):
@@ -34,6 +34,20 @@ class Item(BaseModel):
     addedDate: str
     expiredDate: str
 
+# load homepage
+@app.get("/", response_class=HTMLResponse)
+def get_html() -> HTMLResponse:
+    with open("HomeScreen.html") as html:
+        return HTMLResponse(content=html.read())
+    
+# view individual list pages
+@app.get("/", response_class=HTMLResponse)
+def get_html() -> HTMLResponse:
+    with open("ViewRecipe.html") as html:
+        return HTMLResponse(content=html.read())
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+# kitchen routes
 
 # Kitchen routes
 @app.post('/add_item')
