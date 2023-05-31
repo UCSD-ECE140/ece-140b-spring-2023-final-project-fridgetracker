@@ -14,6 +14,12 @@ function server_request(url, data = {}, verb, callback) {
       .catch(error => console.error('Error:', error));
 }
 
+// # Define a Pydantic model for the item data
+// class Item(BaseModel):
+//     listTage: str
+//     itemName: str
+//     addedDate: str
+//     expierdDate: str
 
 // add items to local storage -- TODO: connect to db using server routes
 function addItem() {
@@ -22,6 +28,17 @@ function addItem() {
     const dateAdded = document.querySelector('input[name="dateAdded"]').value;
     const dateExpire = document.querySelector('input[name="dateExpire"]').value;
     const listSelect = document.querySelector('select[name="list-select"]').value;
+
+    // create item for server pydantic model
+    theItem = { "listTage": listSelect, "itemName":name, "addedDate": dateAdded, "expierdDate":dateExpire}
+    console.log(theItem);
+
+    // add item to db using fetch/server requests
+    server_request('/add_item', theItem, 'POST', function(){
+      // modify html elements here
+      console.log("server_request() successful");
+      console.log("modifying items...");
+    })
   
     // Get the existing list of items for the selected list
     const items = JSON.parse(localStorage.getItem(listSelect)) || [];
@@ -35,4 +52,3 @@ function addItem() {
     // Redirect to HomeScreen.html
     window.location.href = './HomeScreen.html';
   }
-  
