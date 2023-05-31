@@ -10,7 +10,7 @@ from dotenv import load_dotenv                    # Used to read the credentials
 import bcrypt                                     # to encrypt/decrpyt passwords
 from datetime import datetime                     # to provide time and date
 from pydantic import BaseModel                    # to accept Items from server
-
+from flask import session
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 # Configuration - TODO: figure out how pi will access credentials?
 load_dotenv('credentials.env')             # Read in the environment variables for MySQL
@@ -51,7 +51,30 @@ def init_kitchen(kitchen_id:int) -> int:
 
 # User login (authentification)
 # TODO: sessions
+def login_user(username: str, password: str) -> bool:
+    db = mysql.connect(**db_config)
+    cursor = db.cursor()
+    cursor.execute("SELECT pwd FROM User_Registry WHERE user = %s", (username,))
+    result = cursor.fetchone()
+    db.close()
+    
+    if result and bcrypt.checkpw(password.encode('utf-8'), result[0].encode('utf-8')):
+        session['username'] = username
+        return True
+    
+    return False
 
+# Verify if a user is logged in
+def is_user_logged_in() -> bool:
+    return 'username' in session
+
+# Get the currently logged-in user's username
+def get_logged_in_user() -> str:
+    return session.get('username', None)
+
+# Logout the user
+def logout_user() -> None:
+    session.pop('username', None)
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 # Kitchen access (authorization)
