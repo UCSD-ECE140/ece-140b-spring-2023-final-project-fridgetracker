@@ -9,23 +9,18 @@ import os
 import bcrypt
 import db_utils as db
 
-# load credentials for connection to database
-load_dotenv("../credentials.env")
-db_config = {
-    "host": os.environ['MYSQL_HOST'],
-    "user": os.environ['MYSQL_USER'],
-    "password": os.environ['MYSQL_PASSWORD'],
-    "database": os.environ['MYSQL_DATABASE']
-}
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-# Establish connection to the MySQL database
-conn = mysql.connector.connect(**db_config)
+    Configuration
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 # Create a FastAPI application
 app = FastAPI()
 
+# mount the static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
-# views = Jinja2Templates(directory='views')        # specify where the HTML files are located
+views = Jinja2Templates(directory='views')        # specify where the HTML files are located
 
 # Define a Pydantic model for the item data
 class Item(BaseModel):
@@ -34,25 +29,47 @@ class Item(BaseModel):
     addedDate: str
     expiredDate: str
 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+    Basic get routes
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
 # load homepage
 @app.get("/", response_class=HTMLResponse)
 def get_homescreen() -> HTMLResponse:
-    with open("HomeScreen.html") as html:
+    with open("views/HomeScreen.html") as html:
         return HTMLResponse(content=html.read())
     
 # TODO: 
 @app.get("/view_recipe", response_class=HTMLResponse)
 def get_viewrecipe() -> HTMLResponse:
-    with open("ViewRecipe.html") as html:
-        return HTMLResponse(content=html.read())
-    
-@app.get("/create_recipe", response_class=HTMLResponse)
-def get_createrecipe() -> HTMLResponse:
-    with open("CreateRecipe.html") as html:
+    with open("views/ViewRecipe.html") as html:
         return HTMLResponse(content=html.read())
 
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-# kitchen routes
+
+@app.get("/view_recipe/{section}", response_class=HTMLResponse)
+def get_viewrecipe(request: Request, section:str):
+    return views.TemplateResponse("viewrecipe.html", {"request": request, "section": section})
+
+
+@app.get("/create_recipe", response_class=HTMLResponse)
+def get_createrecipe() -> HTMLResponse:
+    with open("views/CreateRecipe.html") as html:
+        return HTMLResponse(content=html.read())
+
+
+# Render the HomeScreen.html template
+@app.get("/HomeScreen.html", response_class=HTMLResponse)
+def home_screen(request: Request):
+    return views.TemplateResponse("HomeScreen.html", {"request": request})
+
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+    Kitchen action routes
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 # Kitchen routes
 @app.post('/add_item')
@@ -75,6 +92,11 @@ def delete_item(item: Item):
         return {'message': 'Item deleted.'}
     return {'message': 'Item not deleted!'}
 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+    Login/Registration
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 # Login/Registration
 class UserRegistration(BaseModel):
@@ -114,17 +136,8 @@ def login_user(user: UserLogin):
     raise HTTPException(status_code=401, detail='Invalid username or password')
 
 
-# Render the HomeScreen.html template
-@app.get("/HomeScreen.html", response_class=HTMLResponse)
-def home_screen(request: Request):
-    return templates.TemplateResponse("HomeScreen.html", {"request": request})
-
-
 # Run the FastAPI application
 if __name__ == '__main__':
     import uvicorn
 
     uvicorn.run(app, host='0.0.0.0', port=8000)
-
-# Close the database connection when the application shuts down
-conn.close()
