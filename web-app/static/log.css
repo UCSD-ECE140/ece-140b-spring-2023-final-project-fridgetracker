@@ -1,0 +1,134 @@
+:root {
+    --fridge-dark: #37251b;
+    --fridge-medium-dark: #80411e;
+    --fridge-medium: #ad6e2f;
+    --fridge-medium-light: #d49961;
+    --fridge-light: #e4bc84;
+    --fridge-milk: #faeadc;
+  
+    --tea-dark: #222f1d;
+    --tea-medium-dark: #2c3e26;
+    --tea-medium: #465f43;
+    --tea-medium-light: #607f60;
+    --tea-light: #c5e7b9;
+    --tea-milk: #f1f9ee;
+  }
+  
+  html { 
+    background: var(--fridge-dark) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    font-size: 62.5%;
+  }
+  
+  * {
+    font-family: Comfortaa;
+    margin: 0;
+    padding: 0;
+  }
+  
+  ul, li {
+    list-style: none;
+  }
+  
+  input {
+    border: none;
+  }
+  
+  body {
+    width: auto;
+    height: auto;
+  }
+  
+  .homescreen {
+    box-sizing: border-box;
+    padding: 5% 5% 5% 5%;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--fridge-dark);
+  }
+  
+  .homescreen .fridgelogo {
+    margin-bottom: 5%;
+    width: 75%;
+    height: 35%;
+    border-radius: 2.4rem;
+    flex-shrink: 0;
+  }
+  
+  .homescreen .login-form,
+  .homescreen .create-user-form {
+    margin-bottom: 15%;
+    width: 50%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--fridge-medium-light);
+    border-radius: 1.6rem;
+    padding: 1.6rem;
+}
+
+.homescreen .inputBox {
+
+margin-bottom: 2rem;
+height: 2rem;
+padding: 0.8rem;
+font-size: 1.6rem;
+background-color: var(--fridge-light);
+border-radius: 0.8rem;
+}
+
+.homescreen button {
+margin-bottom: 2rem;
+height: 3.2rem;
+font-size: 1.6rem;
+font-weight: bold;
+color: var(--fridge-milk);
+background-color: var(--fridge-medium);
+border: none;
+border-radius: 0.1rem;
+cursor: pointer;
+}
+
+.homescreen .line1 {
+margin-bottom: 5%;
+width: 100%;
+height: 0.2rem;
+background-color: var(--fridge-medium-dark);
+}
+
+.homescreen .create-user-form input:last-child {
+margin-bottom: 2rem;
+}
+
+.homescreen .create-user-btn {
+margin-top: 1.2rem;
+align-self: flex-end;
+}
+
+@media screen and (max-width: 600px) {
+.homescreen .fridgelogo {
+  width: 90%;
+  height: 30%;
+}
+
+.homescreen .login-form,
+.homescreen .create-user-form {
+  width: 80%;
+}
+
+.homescreen input {
+  font-size: 1.4rem;
+}
+
+.homescreen button {
+  font-size: 2rem;
+}
+}

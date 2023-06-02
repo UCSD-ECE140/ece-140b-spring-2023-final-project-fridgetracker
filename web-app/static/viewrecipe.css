@@ -124,6 +124,25 @@ body {
   border-radius: 0.8rem;
   flex-shrink: 0;
 }
+
+
+.viewrecipe .item .group1 .inputBox {
+  height: 100%;
+  width: 12em;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 400;
+  /* line-height: 1.115; */
+  color: var(--fridge-dark);
+  font-family: Comfortaa, 'Source Sans Pro';
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--fridge-light);
+  border-radius: 0.8rem;
+  flex-shrink: 0;
+  }
 .viewrecipe .group6 {
   margin: 0rem 3.2rem 2.5rem 2.9rem;
   width: calc(100% - 6.1rem);
@@ -180,7 +199,25 @@ body {
   border-radius: 2.4rem;
   flex-shrink: 0;
 }
-
+.updateButton{
+  margin: 0rem 2.5rem 0rem 3.8rem;
+  width: calc(100% - 3rem);
+  height: 5.4rem;
+  cursor: pointer;
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1.115;
+  color: var(--fridge-dark);
+  font-family: Comfortaa, 'Source Sans Pro';
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--fridge-light);
+  border-radius: 2.4rem;
+  flex-shrink: 0;
+}
 .backtorecipe {
   margin: 0rem 2.5rem 0rem 3.8rem;
   width: calc(100% - 3rem);
@@ -203,5 +240,3 @@ body {
 form{
   /* height: ; */
 }
-
-

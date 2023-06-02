@@ -43,6 +43,17 @@ def get_homescreen(request:Request) -> HTMLResponse:
     items = db.get_category('')
     return views.TemplateResponse("HomeScreen.html", {"request": request, "items": items})
     
+<<<<<<< HEAD
+@app.get("/ViewRecipe.html", response_class=HTMLResponse)
+def get_viewrecipe() -> HTMLResponse:
+    with open("views/ViewRecipe.html") as html:
+        return HTMLResponse(content=html.read())
+
+
+@app.get("/ViewRecipe.html/{section}", response_class=HTMLResponse)
+def get_viewrecipe(request: Request, section: str):
+    return views.TemplateResponse("views/ViewRecipe.html", {"request": request, "section": section})
+=======
 
 @app.get("/view_recipe", response_class=HTMLResponse)
 def get_viewrecipe(request: Request) -> HTMLResponse:
@@ -54,9 +65,10 @@ def get_viewrecipe(request: Request) -> HTMLResponse:
 def get_viewrecipe(request: Request, section:str):
     items = db.get_category(section)
     return views.TemplateResponse("viewrecipe.html", {"request": request, "section": section, "items": items})
+>>>>>>> 0f6eda4aa0ea0ce87d11ab43b21beffdd5cc165a
 
 
-@app.get("/create_recipe", response_class=HTMLResponse)
+@app.get("/CreateRecipe.html", response_class=HTMLResponse)
 def get_createrecipe() -> HTMLResponse:
     with open("views/CreateRecipe.html") as html:
         return HTMLResponse(content=html.read())
@@ -65,7 +77,7 @@ def get_createrecipe() -> HTMLResponse:
 # Render the HomeScreen.html template
 @app.get("/HomeScreen.html", response_class=HTMLResponse)
 def home_screen(request: Request):
-    return views.TemplateResponse("HomeScreen.html", {"request": request})
+    return views.TemplateResponse("/HomeScreen.html", {"request": request})
 
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -138,12 +150,14 @@ def login_user(user: UserLogin):
         hashed_password = user_data['password']
         if bcrypt.checkpw(user.password.encode('utf-8'), hashed_password.encode('utf-8')):
             # Redirect to HomeScreen.html
-            return RedirectResponse(url='/HomeScreen.html')
+            return RedirectResponse(url='views/HomeScreen.html')
     raise HTTPException(status_code=401, detail='Invalid username or password')
 
 
 # Run the FastAPI application
 if __name__ == '__main__':
     import uvicorn
+    
+    uvicorn.run(app, host='192.168.0.34', port=8000)
 
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+    # uvicorn.run(app, host='0.0.0.0', port=8000)

@@ -2,21 +2,13 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="icon" href="./static/logo_fr.jpg">
+    <link rel="icon" href="../static/logo_fr.jpg">
     <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#000000">
     <title>CreateItem</title>
-    <link rel="stylesheet" href="./static/createrecipe.css">
-    <script src="./static/utils.js" defer></script>
-    <script>      
-      function openCamera() {
-        // Code to open camera and scan the product
-        // Retrieve the product name from an API
-        // Prompt where to add the product
-        // Update the input field with the scanned product name
-      }
-    </script>
+    <link rel="stylesheet" href="../static/createrecipe.css">
+    <script src="../static/utils.js" defer></script>
   </head>
   <body>
     <div class="createrecipe">
@@ -58,14 +50,13 @@
       <form class="just"></form>
       <div class="group1">
         <div class="group7">
-
           <button class="save" onclick="addItem()">Save</button>
-          <button class="delete" onclick="window.location.href='/'" 
-            style="background-color: transparent; border-width:0rem">
-            <img class="delete" src="./static/delete.png" style="background-color: transparent; border-width:0rem"></button>
-            <button class="camera"  onclick="window.location.href='./cam.html'">
-              <img class="camera" style="background-color: transparent; border-width:0rem" src="./static/camera.png" alt="Camera">
-            </button>             
+          <button class="delete" onclick="window.location.href='./HomeScreen.html'" style="background-color: transparent; border-width:0rem">
+            <img class="delete" src="../static/delete.png" style="background-color: transparent; border-width:0rem">
+          </button>
+          <button class="camera" onclick="openCamera()">
+            <img class="camera" style="background-color: transparent; border-width:0rem" src="../static/camera.png" alt="Camera">
+          </button>
         </div>
         <button class="backtorecipe" onclick="window.location.href='/'">Back to Main</button>
       </div>

@@ -1,40 +1,33 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <!-- Head content -->
-  </head>
-  <body>
-    <!-- Login page -->
-    <div id="login-page">
-      <h1>Login</h1>
-      <form action="/login" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <input type="submit" value="Login">
-      </form>
-      <p>Don't have an account? <a href="/create-user">Create one</a></p>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="icon" href="/static/logo_fr.jpg">
+  <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>Login</title>
+  <link rel="stylesheet" href="/static/log.css">
+  <script src="/static/utils.js" defer></script>
+</head>
+<body>
+  <div class="homescreen">
+    <div class="fridgelogo">
+      <img class="fridgelogo" src="/static/logo.png">
     </div>
-
-    <!-- Create user page -->
-    <div id="create-user-page">
-      <h1>Create User</h1>
-      <form action="/create-user" method="POST">
-        <label for="first-name">First Name:</label>
-        <input type="text" id="first-name" name="first_name" required>
-        <label for="last-name">Last Name:</label>
-        <input type="text" id="last-name" name="last_name" required>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <input type="submit" value="Create User">
-      </form>
+    <div class="login-form">
+      <input class="inputBox" type="text" placeholder="Username">
+      <input class="inputBox" type="password" placeholder="Password">
+      <button class="login-btn">Login</button>
     </div>
-
-    <!-- Rest of your HTML code -->
-  </body>
+    <div class="line1"></div>
+    <div class="create-user-form">
+      <input class="inputBox" type="text" placeholder="Username">
+      <input class="inputBox" type="password" placeholder="Password">
+      <input class="inputBox" type="password" placeholder="Confirm Password">
+      <button class="login-btn">Create User</button>
+    </div>
+    <div class="line1"></div>
+  </div>
+</body>
 </html>
