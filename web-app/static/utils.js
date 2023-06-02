@@ -43,7 +43,7 @@ function addItem() {
     localStorage.setItem(listSelect, JSON.stringify(items));
   
     // Redirect home
-    window.location.href = '/';
+    window.location.href = './HomeScreen.html';
 }
 // display items
 function display_items(categoryDiv){
