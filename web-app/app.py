@@ -74,11 +74,20 @@ def home_screen(request: Request):
 
 # add an item (requests an item to be sent)
 @app.post('/add_item')
-def add_item(item: Item):
+def add_item_pydantic(item:Item) -> dict:
+    print("adding item...")
+    print(item.listTage, item.itemName, item.addedDate, item.expiredDate)
     if db.add_item(item.listTage, item.itemName, item.addedDate, item.expiredDate):
         return {'message': 'Item added successfully'}
     return {'message': 'Item not added!'}
 
+
+@app.post('/add_item')
+async def add_item_request(request:Request) -> dict:
+    print("adding item...")
+    data = await request.json()
+    print(data)
+    return {'message': 'testing...'}
 
 # retrieve fridge/pantry/counter items
 @app.get('/get_{category}_list')

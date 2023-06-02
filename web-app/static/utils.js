@@ -23,7 +23,7 @@ function addItem() {
     const listSelect = document.querySelector('select[name="list-select"]').value;
 
     // create item for server pydantic model
-    theItem = { "listTage": listSelect, "itemName":name, "addedDate": dateAdded, "expierdDate":dateExpire}
+    theItem = { "listTage": listSelect, "itemName":name, "addedDate": dateAdded, "expiredDate":dateExpire}
     console.log(theItem);
 
     // add item to db using fetch/server requests
