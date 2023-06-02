@@ -248,18 +248,15 @@ updateButton.addEventListener('click', () => {
   }
 
   items.forEach((item, index) => {
-    const updatedNameElement = item.querySelector('.itemName');
+    const updatedNameElement = item.querySelector('.inputBox');
     const updatedName = updatedNameElement ? updatedNameElement.value : '';
-    console.log('Updated Name:', updatedName);
-
+  
     const updatedDateAddedElement = item.querySelector('.dateAdded');
     const updatedDateAdded = updatedDateAddedElement ? updatedDateAddedElement.value : '';
-    console.log('Updated Date Added:', updatedDateAdded);
-
+  
     const updatedDateExpireElement = item.querySelector('.dateExpire');
     const updatedDateExpire = updatedDateExpireElement ? updatedDateExpireElement.value : '';
-    console.log('Updated Date Expire:', updatedDateExpire);
-
+  
     listData[index].name = updatedName;
     listData[index].dateAdded = updatedDateAdded;
     if (updatedDateExpire) {

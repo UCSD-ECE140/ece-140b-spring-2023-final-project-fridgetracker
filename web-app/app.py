@@ -43,7 +43,6 @@ def get_homescreen(request:Request) -> HTMLResponse:
     items = db.get_category('')
     return views.TemplateResponse("HomeScreen.html", {"request": request, "items": items})
     
-<<<<<<< HEAD
 @app.get("/ViewRecipe.html", response_class=HTMLResponse)
 def get_viewrecipe() -> HTMLResponse:
     with open("views/ViewRecipe.html") as html:
@@ -53,19 +52,6 @@ def get_viewrecipe() -> HTMLResponse:
 @app.get("/ViewRecipe.html/{section}", response_class=HTMLResponse)
 def get_viewrecipe(request: Request, section: str):
     return views.TemplateResponse("views/ViewRecipe.html", {"request": request, "section": section})
-=======
-
-@app.get("/view_recipe", response_class=HTMLResponse)
-def get_viewrecipe(request: Request) -> HTMLResponse:
-    items = db.get_category('')
-    return views.TemplateResponse("viewrecipe.html", {"request": request, "items": items})
-
-
-@app.get("/view_recipe/{section}", response_class=HTMLResponse)
-def get_viewrecipe(request: Request, section:str):
-    items = db.get_category(section)
-    return views.TemplateResponse("viewrecipe.html", {"request": request, "section": section, "items": items})
->>>>>>> 0f6eda4aa0ea0ce87d11ab43b21beffdd5cc165a
 
 
 @app.get("/CreateRecipe.html", response_class=HTMLResponse)
