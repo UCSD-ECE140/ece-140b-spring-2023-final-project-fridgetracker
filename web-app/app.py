@@ -37,20 +37,23 @@ class Item(BaseModel):
 
 # load homepage
 @app.get("/", response_class=HTMLResponse)
-def get_homescreen() -> HTMLResponse:
-    with open("views/HomeScreen.html") as html:
-        return HTMLResponse(content=html.read())
+def get_homescreen(request:Request) -> HTMLResponse:
+    # with open("views/HomeScreen.html") as html:
+    #     return HTMLResponse(content=html.read())
+    items = db.get_category('')
+    return views.TemplateResponse("HomeScreen.html", {"request": request, "items": items})
     
-# TODO: 
+
 @app.get("/view_recipe", response_class=HTMLResponse)
-def get_viewrecipe() -> HTMLResponse:
-    with open("views/ViewRecipe.html") as html:
-        return HTMLResponse(content=html.read())
+def get_viewrecipe(request: Request) -> HTMLResponse:
+    items = db.get_category('')
+    return views.TemplateResponse("viewrecipe.html", {"request": request, "items": items})
 
 
 @app.get("/view_recipe/{section}", response_class=HTMLResponse)
 def get_viewrecipe(request: Request, section:str):
-    return views.TemplateResponse("viewrecipe.html", {"request": request, "section": section})
+    items = db.get_category(section)
+    return views.TemplateResponse("viewrecipe.html", {"request": request, "section": section, "items": items})
 
 
 @app.get("/create_recipe", response_class=HTMLResponse)
@@ -71,7 +74,7 @@ def home_screen(request: Request):
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-# Kitchen routes
+# add an item (requests an item to be sent)
 @app.post('/add_item')
 def add_item(item: Item):
     if db.add_item(item.listTage, item.itemName, item.addedDate, item.expiredDate):
@@ -79,11 +82,14 @@ def add_item(item: Item):
     return {'message': 'Item not added!'}
 
 
+# retrieve fridge/pantry/counter items
 @app.get('/get_{category}_list')
 def get_category_list(category: str) -> list:
     data = db.get_category(category)
     if data:
         return data
+    else:
+        return []
 
 
 @app.delete('/delete_item')

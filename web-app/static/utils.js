@@ -23,6 +23,7 @@ function server_request(url, data = {}, verb, callback) {
 
 // add items to local storage -- TODO: connect to db using server routes
 function addItem() {
+  console.log("addItem()");
     // Get values entered in form
     const name = document.querySelector('input[name="ProductBrand"]').value;
     const dateAdded = document.querySelector('input[name="dateAdded"]').value;
@@ -49,8 +50,8 @@ function addItem() {
     // Save the updated list to localStorage
     localStorage.setItem(listSelect, JSON.stringify(items));
   
-    // Redirect to HomeScreen.html
-    window.location.href = './HomeScreen.html';
+    // Redirect home
+    window.location.href = '/';
 }
 
 // display items

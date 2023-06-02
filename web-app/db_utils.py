@@ -95,18 +95,19 @@ def create_category(kitchen_id:int, section:str) -> bool:
 
 # SELECT category - for accessing lists
 # def get_category(kitchen_id:int, section:str) -> list:
-def get_category(section:str) -> list:
+def get_category(section:str='') -> list:
   db = mysql.connect(**db_config)
   cursor = db.cursor()
-  # if kitchen_id == None:
-  #   result = []
-  # else:
-    # query = f"select * from kitchen_{kitchen_id} where section={section};"
   result = []
-  query = f"select (item, added, expiry) from kitchen01 where section={section}"
+  query = ''
+  if (section == ''):
+    query = f"select item, added, expiry from kitchen01"
+  else:
+    query = f"select item, added, expiry from kitchen01 where section={section}"
   cursor.execute(query)
   result = cursor.fetchall()
   db.close()
+  print(result)
   return result # result contains item, added, expiry
 
 # UPDATE category - for renaming categories...

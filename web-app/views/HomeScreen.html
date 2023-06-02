@@ -3,25 +3,26 @@
 
   <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <link rel="icon" href="./static/logo_fr.jpg">
+  <link rel="icon" href="../static/logo_fr.jpg">
   <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#000000">
   <title>HomeScreen</title>
-  <link rel="stylesheet" href="./static/homescreen.css">
-  <script src="./static/utils.js" defer></script>
+  <link rel="stylesheet" href="../static/homescreen.css">
+  <script src="../static/utils.js" defer></script>
 
 </head>
 <body>
 <div class="homescreen">
   <div class="fridgelogo">
-    <img class="fridgelogo" src="./static/logo.png">
+    <img class="fridgelogo" src="../static/logo.png">
   </div>
   <div class="group1">
-    <button class="AddHave" onclick="window.location.href='./CreateRecipe.html'">Add</button>
-    <button class="AddAll" onclick="window.location.href='./ViewRecipe.html?list=All'">View</button>
+    <button class="AddHave" onclick="window.location.href='/create_recipe'">Add Item</button>
+    <button class="AddAll" onclick="window.location.href='./view_recipe'">View All</button>
   </div>
-  <button class="FridgeList" onclick="window.location.href='./ViewRecipe.html?list=FridgeListS'">Fridge</button>
+  <!-- <button class="FridgeList" onclick="window.location.href='./ViewRecipe.html?list=FridgeListS'">Fridge</button> -->
+  <button class="FridgeList" onclick="window.location.href='./view_recipe/fridge'">Fridge</button>
   <div class="line1">
   </div>
   <div class = "FridgeListS">

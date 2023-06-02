@@ -25,15 +25,15 @@
         <div class="Item">
           <div class="group1">
             <p class="Text">Product Name</p>
-            <input contenteditable="true" class="component" value="Nescafé" name="ProductBrand">
+            <input contenteditable="true" class="component" placeholder="Bread" name="ProductBrand" autofocus>
           </div>
         </div>
         <div class="Item">
           <div class="group1">
             <p class="Text">Added date</p>
-            <input contenteditable="true" type="date" class="component" id="e" name="dateAdded">
+            <input contenteditable="true" type="date" class="component" id="add_date_input" name="dateAdded">
             <script>
-              document.getElementById('e').value = new Date().toISOString().substring(0, 10);
+              document.getElementById('add_date_input').value = new Date().toISOString().substring(0, 10);
             </script>
           </div>
         </div>
@@ -60,14 +60,14 @@
         <div class="group7">
 
           <button class="save" onclick="addItem()">Save</button>
-          <button class="delete" onclick="window.location.href='./HomeScreen.html'" 
+          <button class="delete" onclick="window.location.href='/'" 
             style="background-color: transparent; border-width:0rem">
             <img class="delete" src="./static/delete.png" style="background-color: transparent; border-width:0rem"></button>
             <button class="camera"  onclick="window.location.href='./cam.html'">
               <img class="camera" style="background-color: transparent; border-width:0rem" src="./static/camera.png" alt="Camera">
             </button>             
         </div>
-        <button class="backtorecipe" onclick="window.location.href='./HomeScreen.html'">Back to Main</button>
+        <button class="backtorecipe" onclick="window.location.href='/'">Back to Main</button>
       </div>
     </div>
   </body>
