@@ -58,6 +58,7 @@
     margin-bottom: 5%;
     width: 75%;
     height: 35%;
+    align-items: auto;
     border-radius: 2.4rem;
     flex-shrink: 0;
   }
