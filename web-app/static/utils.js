@@ -165,7 +165,6 @@ function populateViewData() {
       groceryListDiv.appendChild(div);
     });
   }
-
   const deleteButton = document.querySelector('.deleteButton');
   deleteButton.addEventListener('click', () => {
     const checkboxes = document.querySelectorAll('.itemCheckbox');
@@ -188,17 +187,29 @@ function populateViewData() {
   
       checkedItems.forEach((index) => {
         if (index < fridgeListData.length) {
-          fridgeListData.splice(index - deletedItems.length, 1);
-          deletedItems.push('FridgeListS');
+          const deletedItem = fridgeListData.splice(index - deletedItems.length, 1)[0];
+          deletedItems.push({
+            list: 'FridgeListS',
+            item: deletedItem
+          });
         } else if (index < fridgeListData.length + counterItemListData.length) {
-          counterItemListData.splice(index - fridgeListData.length - deletedItems.length, 1);
-          deletedItems.push('CounterItemS');
+          const deletedItem = counterItemListData.splice(index - fridgeListData.length - deletedItems.length, 1)[0];
+          deletedItems.push({
+            list: 'CounterItemS',
+            item: deletedItem
+          });
         } else if (index < fridgeListData.length + counterItemListData.length + pantryItemListData.length) {
-          pantryItemListData.splice(index - fridgeListData.length - counterItemListData.length - deletedItems.length, 1);
-          deletedItems.push('PantryItemS');
+          const deletedItem = pantryItemListData.splice(index - fridgeListData.length - counterItemListData.length - deletedItems.length, 1)[0];
+          deletedItems.push({
+            list: 'PantryItemS',
+            item: deletedItem
+          });
         } else {
-          shoppingListData.splice(index - fridgeListData.length - counterItemListData.length - pantryItemListData.length - deletedItems.length, 1);
-          deletedItems.push('ShoppingListS');
+          const deletedItem = shoppingListData.splice(index - fridgeListData.length - counterItemListData.length - pantryItemListData.length - deletedItems.length, 1)[0];
+          deletedItems.push({
+            list: 'ShoppingListS',
+            item: deletedItem
+          });
         }
       });
   
@@ -207,7 +218,18 @@ function populateViewData() {
       localStorage.setItem('PantryItemS', JSON.stringify(pantryItemListData));
       localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
   
-      deletedItems.forEach((list) => {
+      deletedItems.forEach((deletedItem) => {
+        const list = deletedItem.list;
+        const item = deletedItem.item;
+  
+        const addToShoppingList = confirm(`Do you want to add "${item.name}" to the ShoppingListS?`);
+  
+        if (addToShoppingList) {
+          const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
+          shoppingListData.push(item);
+          localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
+        }
+  
         const listData = document.querySelector('.grocery-list[data-list="' + list + '"]');
         if (listData) {
           listData.innerHTML = '';
@@ -215,8 +237,20 @@ function populateViewData() {
       });
     } else {
       // Delete items from the selected list
+      const listData = JSON.parse(localStorage.getItem(listParam) || '[]');
+      const deletedItems = [];
+  
       checkedItems.forEach((index) => {
-        listData.splice(index, 1);
+        const deletedItem = listData.splice(index - deletedItems.length, 1)[0];
+        deletedItems.push(deletedItem);
+  
+        const addToShoppingList = confirm(`Do you want to add "${deletedItem.name}" to the ShoppingListS?`);
+  
+        if (addToShoppingList) {
+          const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
+          shoppingListData.push(deletedItem);
+          localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
+        }
       });
   
       localStorage.setItem(listParam, JSON.stringify(listData));
@@ -229,49 +263,38 @@ function populateViewData() {
   
     window.location.reload();
   });
-
-
   
+  
+
   const updateButton = document.querySelector('.updateButton');
 updateButton.addEventListener('click', () => {
   let listData = JSON.parse(localStorage.getItem(listParam) || '[]');
   console.log('Retrieved listData:', listData);
 
-  const items = document.querySelectorAll('.grocery-list');
+  const items = document.querySelectorAll('.grocery-list .item');
   console.log(items);
-
-  // Initialize listData if empty
-  if (listData.length === 0) {
-    items.forEach(() => {
-      listData.push({});
-    });
-  }
 
   items.forEach((item, index) => {
     const updatedNameElement = item.querySelector('.inputBox');
     const updatedName = updatedNameElement ? updatedNameElement.value : '';
-  
+
     const updatedDateAddedElement = item.querySelector('.dateAdded');
     const updatedDateAdded = updatedDateAddedElement ? updatedDateAddedElement.value : '';
-  
+
     const updatedDateExpireElement = item.querySelector('.dateExpire');
     const updatedDateExpire = updatedDateExpireElement ? updatedDateExpireElement.value : '';
-  
+
     listData[index].name = updatedName;
     listData[index].dateAdded = updatedDateAdded;
-    if (updatedDateExpire) {
-      listData[index].dateExpire = updatedDateExpire;
-    }
+    listData[index].dateExpire = updatedDateExpire;
   });
 
   console.log('Updated listData:', listData);
 
   localStorage.setItem(listParam, JSON.stringify(listData));
 
-  // window.location.reload();
+  window.location.reload();
 });
 
-
-  
 
 }

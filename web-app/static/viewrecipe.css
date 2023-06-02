@@ -146,6 +146,65 @@ input {
   border-radius: 0.8rem;
   flex-shrink: 0;
 }
+.viewrecipe .item .group1 .itemCheckbox {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+}
+
+.viewrecipe .item .group1 .itemCheckbox input[type="checkbox"] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.viewrecipe .item .group1 .itemCheckbox label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  background-color: var(--fridge-light);
+  border-radius: 3px;
+}
+
+.viewrecipe .item .group1 .itemCheckbox label::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.viewrecipe .item .group1 .itemCheckbox input[type="checkbox"]:checked + label::after {
+  display: block;
+}
+
+.viewrecipe .item .group1 .itemCheckbox label::after {
+  left: 4px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--fridge-dark);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+/* Override default checkbox styles */
+.viewrecipe .item .group1 .itemCheckbox input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 2px solid var(--fridge-dark);
+  border-radius: 3px;
+  outline: none;
+  width: 16px;
+  height: 16px;
+}
+
+.viewrecipe .item .group1 .itemCheckbox input[type="checkbox"]:checked {
+  background-color: var(--fridge-light);
+  border-color: var(--fridge-dark);
+}
 
 .viewrecipe .group6 {
   margin: 0rem 3.2rem 2.5rem 2.9rem;
@@ -199,7 +258,6 @@ input {
   justify-content: center;
   /* background-color: var(--fridge-light); */
   background-color: transparent;
-
   border-radius: 2.4rem;
   flex-shrink: 0;
 }
