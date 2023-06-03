@@ -80,7 +80,7 @@ def add_item(item:Item) -> dict:
     return {'message': 'Item not added!'}
 
 
-# retrieve fridge/pantry/counter items
+# retrieve FridgeListS/CounterItemS/PantryItemS/ShoppingListS items list
 @app.get('/get_{category}_list')
 def get_category_list(category: str) -> list:
     data = db.get_category(category)

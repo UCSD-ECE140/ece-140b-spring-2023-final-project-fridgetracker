@@ -59,9 +59,7 @@ function populateData() {
 
   fetch('/get_FridgeListS_list', {method: 'GET'})
   .then(response => response.json())
-  .then(response => {
-    var theFridgeList = response;
-    
+  .then(theFridgeList => {    
     // update the list into the html
     const fridgeListDiv = document.querySelector('.FridgeListS');
     theFridgeList.forEach(item => {
