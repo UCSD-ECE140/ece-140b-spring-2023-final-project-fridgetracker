@@ -101,13 +101,12 @@ def get_category(section:str='') -> list:
   result = []
   query = ''
   if (section == ''):
-    query = f"select item, added, expiry from kitchen01"
+    query = f"select item, added, expiry from kitchen01" # by default gets all the items
   else:
-    query = f"select item, added, expiry from kitchen01 where section={section}"
+    query = f"select item, added, expiry from kitchen01 where section='{section}'"
   cursor.execute(query)
   result = cursor.fetchall()
   db.close()
-  print(result)
   return result # result contains item, added, expiry
 
 # UPDATE category - for renaming categories...

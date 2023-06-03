@@ -1,4 +1,5 @@
 // request function for handling interactions with the server
+// note: server_request has error when calling GET so use fetch instead
 function server_request(url, data = {}, verb, callback) {
   return fetch(url, {
       credentials: 'same-origin',
@@ -42,55 +43,82 @@ function addItem() {
       window.location.href = '/';
     })
 }
-// display items
-function display_items(categoryDiv){
-  categoryDiv.forEach(item => {
-    const div = document.createElement('div');
-    // div.classList.add('PantryListItem');
-    div.textContent = `${item.name}, Added: ${item.dateAdded}, Expiry: ${item.dateExpire}`;
-    categoryDiv.appendChild(div);
-  })
-}
+// // display items
+// function display_items(categoryDiv){
+//   categoryDiv.forEach(item => {
+//     const div = document.createElement('div');
+//     // div.classList.add('PantryListItem');
+//     div.textContent = `${item.name}, Added: ${item.dateAdded}, Expiry: ${item.dateExpire}`;
+//     categoryDiv.appendChild(div);
+//   })
+// }
 
-//current populating js
+//current populating js -- for home page
 function populateData() {
-  const fridgeList = JSON.parse(localStorage.getItem('FridgeListS') || '[]');
-  const counterItems = JSON.parse(localStorage.getItem('CounterItemS') || '[]');
-  const pantryItems = JSON.parse(localStorage.getItem('PantryItemS') || '[]');
-  const shoppingList = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
+  // get sections through database
 
-  const fridgeListDiv = document.querySelector('.FridgeListS');
-  fridgeList.forEach(item => {
-    const div = document.createElement('div');
-    div.classList.add('FridgeListItem');
-    div.textContent = `${item.name},  Expiry at ${item.dateExpire}`;
-    fridgeListDiv.appendChild(div);
-  });
+  fetch('/get_FridgeListS_list', {method: 'GET'})
+  .then(response => response.json())
+  .then(response => {
+    var theFridgeList = response;
+    
+    // update the list into the html
+    const fridgeListDiv = document.querySelector('.FridgeListS');
+    theFridgeList.forEach(item => {
+      const div = document.createElement('div');
+      div.classList.add('FridgeListItem');
+      expiry = item[2].substring(0, 10);
+      div.textContent = `${item[0]},  Expiry at ${expiry}`;
+      fridgeListDiv.appendChild(div);
+    });
+  })
+  .catch(error => console.error('Error:', error));
 
-  const counterItemDiv = document.querySelector('.CounterItemS');
-  counterItems.forEach(item => {
-    const div = document.createElement('div');
-    div.classList.add('CounterListItem');
-    div.textContent = `${item.name},  Expiry at ${item.dateExpire}`;
-    counterItemDiv.appendChild(div);
-  });
+  fetch('/get_CounterItemS_list', {method:'GET'})
+  .then(response => response.json())
+  .then(response => {
+    counterItems = response;
+    const counterItemDiv = document.querySelector('.CounterItemS');
+    counterItems.forEach(item => {
+      const div = document.createElement('div');
+      div.classList.add('CounterListItem');
+      expiry = item[2].substring(0, 10);
+      div.textContent = `${item[0]},  Expiry at ${expiry}`;
+      counterItemDiv.appendChild(div);
+    });
+  })
+  .catch(error => console.error('Error:', error));
 
-  const pantryItemDiv = document.querySelector('.PantryItemS');
-  pantryItems.forEach(item => {
-    const div = document.createElement('div');
-    div.classList.add('PantryListItem');
-    div.textContent = `${item.name},  Expiry: ${item.dateExpire}`;
-    pantryItemDiv.appendChild(div);
-  });
+  fetch('/get_PantryItemS_list', {method:'GET'})
+  .then(response => response.json())
+  .then(pantryItems => {
+    const counterItemDiv = document.querySelector('.PantryItemS');
+    pantryItems.forEach(item => {
+      const div = document.createElement('div');
+      div.classList.add('PantryListItem');
+      expiry = item[2].substring(0, 10);
+      div.textContent = `${item[0]},  Expiry at ${expiry}`;
+      counterItemDiv.appendChild(div);
+    });
+  })
+  .catch(error => console.error('Error:', error));
 
-  const shoppingListDiv = document.querySelector('.ShoppingListS');
-  shoppingList.forEach(item => {
-    const div = document.createElement('div');
-    div.classList.add('ShoppingListItem');
-    div.textContent = `${item.name}, Added: ${item.dateAdded}`;
-    shoppingListDiv.appendChild(div);
-  });
+  fetch('/get_ShoppingListS_list', {method:'GET'})
+  .then(response => response.json())
+  .then(shoppingList => {
+    const counterItemDiv = document.querySelector('.ShoppingListS');
+    shoppingList.forEach(item => {
+      const div = document.createElement('div');
+      div.classList.add('ShoppingListItem');
+      expiry = item[2].substring(0, 10);
+      div.textContent = `${item[0]},  Expiry at ${expiry}`;
+      counterItemDiv.appendChild(div);
+    });
+  })
+  .catch(error => console.error('Error:', error));
 }
+
+// populate individual sections
 function populateViewData() {
   const urlParams = new URLSearchParams(window.location.search);
   const listParam = urlParams.get('list');

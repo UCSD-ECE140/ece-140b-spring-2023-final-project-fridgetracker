@@ -75,7 +75,6 @@ def home_screen(request: Request):
 # add an item (requests an item to be sent)
 @app.post('/add_item')
 def add_item(item:Item) -> dict:
-    print("adding item...")
     if db.add_item(item.listTage, item.itemName, item.addedDate, item.expiredDate):
         return {'message': 'Item added successfully'}
     return {'message': 'Item not added!'}
