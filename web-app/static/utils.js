@@ -15,7 +15,6 @@ function server_request(url, data = {}, verb, callback) {
 }
 // add items to local storage -- TODO: connect to db using server routes
 function addItem() {
-  console.log("addItem()");
     // Get values entered in form
     const name = document.querySelector('input[name="ProductBrand"]').value;
     const dateAdded = document.querySelector('input[name="dateAdded"]').value;
@@ -23,27 +22,25 @@ function addItem() {
     const listSelect = document.querySelector('select[name="list-select"]').value;
 
     // create item for server pydantic model
-    theItem = { "listTage": listSelect, "itemName":name, "addedDate": dateAdded, "expiredDate":dateExpire}
-    console.log(theItem);
+    theItem = { "listTage": listSelect, "itemName":name, "addedDate": dateAdded, "expiredDate":dateExpire};
 
     // add item to db using fetch/server requests
     server_request('/add_item', theItem, 'POST', function(){
-      // modify html elements here
-      console.log("server_request() successful");
-      console.log("modifying items...");
+      
+      // next 3 lines are local storage, remove later
+      // Get the existing list of items for the selected list
+      const items = JSON.parse(localStorage.getItem(listSelect)) || [];
+    
+      // Add the new item to the list
+      items.push({ name, dateAdded, dateExpire });
+    
+      // Save the updated list to localStorage
+      localStorage.setItem(listSelect, JSON.stringify(items));
+    
+      // Redirect home
+      alert(`${name} added to ${listSelect}!`);
+      window.location.href = '/';
     })
-  
-    // Get the existing list of items for the selected list
-    const items = JSON.parse(localStorage.getItem(listSelect)) || [];
-  
-    // Add the new item to the list
-    items.push({ name, dateAdded, dateExpire });
-  
-    // Save the updated list to localStorage
-    localStorage.setItem(listSelect, JSON.stringify(items));
-  
-    // Redirect home
-    window.location.href = './HomeScreen.html';
 }
 // display items
 function display_items(categoryDiv){

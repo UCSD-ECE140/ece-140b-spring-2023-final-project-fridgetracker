@@ -17,22 +17,19 @@
         <div class="Item">
           <div class="group1">
             <p class="Text">Product Name</p>
-            <input contenteditable="true" class="component" placeholder="Bread" name="ProductBrand" autofocus>
+            <input contenteditable="true" class="component" value="Bread" name="ProductBrand" autofocus required>
           </div>
         </div>
         <div class="Item">
           <div class="group1">
             <p class="Text">Added date</p>
             <input contenteditable="true" type="date" class="component" id="add_date_input" name="dateAdded">
-            <script>
-              document.getElementById('add_date_input').value = new Date().toISOString().substring(0, 10);
-            </script>
           </div>
         </div>
         <div class="Item">
           <div class="group1">
             <p class="Text">Expiration Date</p>
-            <input contenteditable="true" type="date" class="component" name="dateExpire">
+            <input contenteditable="true" type="date" class="component" id="expire_date_input" name="dateExpire">
           </div>
         </div>
         <div class="Item">
@@ -62,4 +59,15 @@
       </div>
     </div>
   </body>
+  <script>
+    // make sure add, expire dates are not null
+    var theAddDate = new Date().toISOString().substring(0, 10);
+    document.getElementById('add_date_input').value = theAddDate;
+
+    // add 7 days to the current date
+    var theExpireDate = new Date();
+    theExpireDate.setDate(new Date().getDate() + 7);
+    theExpireDate = theExpireDate.toISOString().substring(0, 10);
+    document.getElementById('expire_date_input').value = theExpireDate;
+  </script>
 </html>
