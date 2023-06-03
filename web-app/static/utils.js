@@ -116,6 +116,21 @@ function populateData() {
   .catch(error => console.error('Error:', error));
 }
 
+
+//helper function for delete
+
+function deleteItem(itemName, listSelect) {
+  const confirmation = confirm(`Are you sure you want to delete ${itemName}?`);
+  if (confirmation) {
+    const data = { listTage: listSelect, itemName: itemName };
+    server_request('/delete_item', data, 'DELETE', function () {
+      // Remove the item from the DOM or perform any other necessary actions
+      alert(`${itemName} deleted from ${listSelect}!`);
+      location.reload(); // Refresh the page
+    });
+  }
+}
+
 // helper function for fetch get route
 function fetch_list(section){
   var listData;
@@ -200,17 +215,33 @@ function populateViewData() {
       groceryListDiv.appendChild(div);
     });
   }
-
-  const deleteButton = document.querySelector('.deleteButton');
+  //sako
   deleteButton.addEventListener('click', () => {
     const checkboxes = document.querySelectorAll('.itemCheckbox');
     const checkedItems = [];
   
     checkboxes.forEach((checkbox, index) => {
       if (checkbox.checked) {
-        checkedItems.push(index);
+        const itemName = checkbox.parentElement.querySelector('.inputBox').value;
+        checkedItems.push(itemName);
       }
     });
+  
+    checkedItems.forEach((itemName) => {
+      deleteItem(itemName, listSelect);
+    });
+  });
+  
+  // const deleteButton = document.querySelector('.deleteButton');
+  // deleteButton.addEventListener('click', () => {
+  //   const checkboxes = document.querySelectorAll('.itemCheckbox');
+  //   const checkedItems = [];
+  
+  //   checkboxes.forEach((checkbox, index) => {
+  //     if (checkbox.checked) {
+  //       checkedItems.push(index);
+  //     }
+  //   });
   
     if (listParam === 'All') {
       // Delete items from individual lists
