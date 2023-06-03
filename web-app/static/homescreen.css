@@ -5,13 +5,6 @@
   --fridge-medium-light: #d49961;
   --fridge-light: #e4bc84;
   --fridge-milk: #faeadc;
-
-  --tea-dark: #222f1d;
-  --tea-medium-dark: #2c3e26;
-  --tea-medium: #465f43;
-  --tea-medium-light: #607f60;
-  --tea-light: #c5e7b9;
-  --tea-milk: #f1f9ee;
 }
 html { 
   background:var(--fridge-dark) no-repeat center center fixed; 
