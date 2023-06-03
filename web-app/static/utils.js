@@ -116,6 +116,18 @@ function populateData() {
   .catch(error => console.error('Error:', error));
 }
 
+// helper function for fetch get route
+function fetch_list(section){
+  var listData;
+  fetch(`/get_${section}_list`, {method: 'GET'})
+  .then(response => response.json())
+  .then(theList => { 
+    listData = theList.json();
+  })
+  .catch(error => console.error('Error:', error));
+  return listData;
+}
+
 // populate individual sections
 function populateViewData() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -188,6 +200,7 @@ function populateViewData() {
       groceryListDiv.appendChild(div);
     });
   }
+
   const deleteButton = document.querySelector('.deleteButton');
   deleteButton.addEventListener('click', () => {
     const checkboxes = document.querySelectorAll('.itemCheckbox');
@@ -201,11 +214,23 @@ function populateViewData() {
   
     if (listParam === 'All') {
       // Delete items from individual lists
-      const fridgeListData = JSON.parse(localStorage.getItem('FridgeListS') || '[]');
+      
+      // local storage version
+      // const fridgeListData = JSON.parse(localStorage.getItem('FridgeListS') || '[]');
       const counterItemListData = JSON.parse(localStorage.getItem('CounterItemS') || '[]');
       const pantryItemListData = JSON.parse(localStorage.getItem('PantryItemS') || '[]');
       const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
   
+      // use a fetch request 
+      var fridgeListData;
+      fetch('/get_FridgeListS_list', {method: 'GET'})
+      .then(response => response.json())
+      .then(theFridgeList => { 
+        fridgeListData = theFridgeList.json();
+      })
+      .catch(error => console.error('Error:', error));
+      console.log(fridgeListData);
+
       const deletedItems = [];
   
       checkedItems.forEach((index) => {
