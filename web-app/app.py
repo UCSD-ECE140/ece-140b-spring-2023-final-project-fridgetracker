@@ -10,6 +10,7 @@ import os
 import bcrypt
 import db_utils as db
 import requests
+import cv2
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -33,6 +34,19 @@ class Item(BaseModel):
     itemName: str
     addedDate: str
     expiredDate: str
+
+
+
+camera_id = 0   # default value is 0 if you only have one camera
+delay = 1
+
+bd = cv2.barcode.BarcodeDetector()
+cap = cv2.VideoCapture(camera_id)
+
+barcodes = [0]*5
+
+frame = 0
+enable = 0
 
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -170,27 +184,60 @@ def login_user(user: UserLogin):
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+@app.get('/getbarcode')
+async def cv_barcode_get():
+    global frame, enable
+
+    enable = 1
+
+    while True:
+        ret, frame = cap.read()
+        if ret:
+            ret_bc, decoded_info, _, points = bd.detectAndDecode(frame)
+            if ret_bc:
+                
+                for s, p in zip(decoded_info, points):
+                    
+                    # if a valid barcode value is found
+                    if s:                    
+                        # shift data through a 5 element list each time a new barcode is detected, with the newest barcode at index 0
+                        # and the oldest at index 4. If a new barcode is detected, the list shifts up by one (data @ index 0 -> index 1),
+                        # the barcode previously at index 4 is discarded, and the new barcode is added at index 0
+                        for i in reversed(range(len(barcodes))):
+                            barcodes[i] = barcodes[i-1]
+                        barcodes[0] = s
+
+                # if all elements in the barcodes list are the same (aka the scanner has scanned the same barcode number 5 times in a row)
+                if len(set(barcodes)) == 1:
+                    # retrieve product data from api
+                    rawdata = requests.get('https://api.barcodelookup.com/v3/products?barcode=%s&key=6zusy8frdfgq2uriti6lu5v74ws6n5' % barcodes[0]).json()
+                    productdata = rawdata['products'][0]
+                    
+                    enable = 0
+
+                    return productdata['title']
+                
 
 # @app.post("/barcode")
 # def retrieve_barcode_info(barcodes):
 #     # print(barcodes)
 #     print("hello")
 
-@app.post('/barcode')
-async def process_barcode(data: dict):
-    barcode = data.get('barcode')
-    # Do something with the barcode string
-    # You can add your processing logic here
-    print(barcode)
-    print(type(barcode))
-    rawdata = requests.get(
-        'https://api.barcodelookup.com/v3/products?barcode=%s&key=27lavzpbu9png7o8dpuekaiosxq1d6' % barcode)
-    print(rawdata)
-    jsondata = rawdata.json()
-    print(jsondata)
-    productdata = jsondata['products'][0]['title']
-    print(productdata)
-    return {'product': productdata}
+# @app.post('/barcode')
+# async def process_barcode(data: dict):
+#     barcode = data.get('barcode')
+#     # Do something with the barcode string
+#     # You can add your processing logic here
+#     print(barcode)
+#     print(type(barcode))
+#     rawdata = requests.get(
+#         'https://api.barcodelookup.com/v3/products?barcode=%s&key=27lavzpbu9png7o8dpuekaiosxq1d6' % barcode)
+#     print(rawdata)
+#     jsondata = rawdata.json()
+#     print(jsondata)
+#     productdata = jsondata['products'][0]['title']
+#     print(productdata)
+#     return {'product': productdata}
 
     # Return a response
     # return {'message': 'Barcode processed successfully'}
