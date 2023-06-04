@@ -1,13 +1,15 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles       # for serving static files
-from fastapi.templating import Jinja2Templates    # for generating HTML from templatized files
+# for generating HTML from templatized files
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import mysql.connector
 from dotenv import load_dotenv
 import os
 import bcrypt
 import db_utils as db
+import requests
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -20,14 +22,18 @@ app = FastAPI()
 
 # mount the static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
-views = Jinja2Templates(directory='views')        # specify where the HTML files are located
+# specify where the HTML files are located
+views = Jinja2Templates(directory='views')
 
 # Define a Pydantic model for the item data
+
+
 class Item(BaseModel):
     listTage: str
     itemName: str
     addedDate: str
     expiredDate: str
+
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -36,13 +42,16 @@ class Item(BaseModel):
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 # load homepage
+
+
 @app.get("/", response_class=HTMLResponse)
-def get_homescreen(request:Request) -> HTMLResponse:
+def get_homescreen(request: Request) -> HTMLResponse:
     # with open("views/HomeScreen.html") as html:
     #     return HTMLResponse(content=html.read())
     items = db.get_category('')
     return views.TemplateResponse("HomeScreen.html", {"request": request, "items": items})
-    
+
+
 @app.get("/ViewRecipe.html", response_class=HTMLResponse)
 def get_viewrecipe() -> HTMLResponse:
     with open("views/ViewRecipe.html") as html:
@@ -60,6 +69,16 @@ def get_createrecipe() -> HTMLResponse:
         return HTMLResponse(content=html.read())
 
 
+@app.get("/cam.html", response_class=HTMLResponse)
+def get_camera() -> HTMLResponse:
+    with open("views/cam.html") as html:
+        return HTMLResponse(content=html.read())
+    
+@app.get("/test.html", response_class=HTMLResponse)
+def get_camera() -> HTMLResponse:
+    with open("views/test.html") as html:
+        return HTMLResponse(content=html.read())
+
 # Render the HomeScreen.html template
 @app.get("/HomeScreen.html", response_class=HTMLResponse)
 def home_screen(request: Request):
@@ -73,8 +92,10 @@ def home_screen(request: Request):
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 # add an item (requests an item to be sent)
+
+
 @app.post('/add_item')
-def add_item(item:Item) -> dict:
+def add_item(item: Item) -> dict:
     if db.add_item(item.listTage, item.itemName, item.addedDate, item.expiredDate):
         return {'message': 'Item added successfully'}
     return {'message': 'Item not added!'}
@@ -96,6 +117,7 @@ def delete_item(item: Item):
         return {'message': 'Item deleted.'}
     return {'message': 'Item not deleted!'}
 
+
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     Login/Registration
@@ -103,6 +125,8 @@ def delete_item(item: Item):
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 # Login/Registration
+
+
 class UserRegistration(BaseModel):
     first_name: str
     last_name: str
@@ -140,12 +164,51 @@ def login_user(user: UserLogin):
     raise HTTPException(status_code=401, detail='Invalid username or password')
 
 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+    Camera and Barcode API
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+# @app.post("/barcode")
+# def retrieve_barcode_info(barcodes):
+#     # print(barcodes)
+#     print("hello")
+
+@app.post('/barcode')
+async def process_barcode(data: dict):
+    barcode = data.get('barcode')
+    # Do something with the barcode string
+    # You can add your processing logic here
+    print(barcode)
+    print(type(barcode))
+    rawdata = requests.get(
+        'https://api.barcodelookup.com/v3/products?barcode=%s&key=27lavzpbu9png7o8dpuekaiosxq1d6' % barcode)
+    print(rawdata)
+    jsondata = rawdata.json()
+    print(jsondata)
+    productdata = jsondata['products'][0]['title']
+    print(productdata)
+    return {'product': productdata}
+
+    # Return a response
+    # return {'message': 'Barcode processed successfully'}
+
+
 # Run the FastAPI application
 if __name__ == '__main__':
     import uvicorn
-    
-    # uvicorn.run(app, host='192.168.0.34', port=8000)
-    uvicorn.run(app, host='100.80.240.83', port=8000)
-    
+
+    #uvicorn.run(app, host='192.168.0.34', port=8000)
+    # uvicorn.run(app, host='100.80.240.83', port=8000)
+    uvicorn.run(
+        app,
+        host='192.168.0.34',
+        port=8000,
+        ssl_keyfile="key.pem",
+        ssl_certfile="cert.pem",
+    )
+
     # 100.80.240.83
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+    #uvicorn.run(app, host='0.0.0.0', port=8000)

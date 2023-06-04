@@ -14,7 +14,9 @@ function server_request(url, data = {}, verb, callback) {
       })
       .catch(error => console.error('Error:', error));
 }
-// add items to local storage -- TODO: connect to db using server routes
+
+
+// add items to local storage connected to db using server routes
 function addItem() {
     // Get values entered in form
     const name = document.querySelector('input[name="ProductBrand"]').value;
@@ -43,82 +45,50 @@ function addItem() {
       window.location.href = '/';
     })
 }
-// // display items
-// function display_items(categoryDiv){
-//   categoryDiv.forEach(item => {
-//     const div = document.createElement('div');
-//     // div.classList.add('PantryListItem');
-//     div.textContent = `${item.name}, Added: ${item.dateAdded}, Expiry: ${item.dateExpire}`;
-//     categoryDiv.appendChild(div);
-//   })
-// }
 
-//current populating js -- for home page
-function populateData() {
-  // get sections through database
 
-  fetch('/get_FridgeListS_list', {method: 'GET'})
+// populates homepage section lists with db data
+function populateData(){
+  const sections = ['FridgeListS', 'CounterItemS', 'PantryItemS', 'ShoppingListS'];
+  for (let i = 0; i < sections.length; i++) {
+    get_list_from_db(sections[i]);
+  }
+  console.log('homepage section lists populated with db data.');
+}
+
+// helper function to get list from db and add elements.
+// input: listName (string)
+function get_list_from_db(listName){
+  fetch(`/get_${listName}_list`, {method:'GET'})
   .then(response => response.json())
-  .then(theFridgeList => {    
-    // update the list into the html
-    const fridgeListDiv = document.querySelector('.FridgeListS');
-    theFridgeList.forEach(item => {
+  .then(retrievedList => {
+
+    // select the div container for section list
+    const listDiv = document.querySelector(`.${listName}`);
+    var listClass = '';
+    if (listName == 'FridgeListS'){
+      listClass = 'FridgeListItem'
+    } else if (listName == 'CounterItemS'){
+      listClass = 'CounterListItem'
+    } else if (listName == 'PantryItemS'){
+      listClass = 'PantryListItem'
+    } else if (listName == 'ShoppingListS'){
+      listClass = 'ShoppingListItem'
+    } 
+
+    // add each item to list
+    retrievedList.forEach(item => {
       const div = document.createElement('div');
-      div.classList.add('FridgeListItem');
+      div.classList.add(listClass);
       expiry = item[2].substring(0, 10);
       div.textContent = `${item[0]},  Expiry at ${expiry}`;
-      fridgeListDiv.appendChild(div);
-    });
-  })
-  .catch(error => console.error('Error:', error));
-
-  fetch('/get_CounterItemS_list', {method:'GET'})
-  .then(response => response.json())
-  .then(response => {
-    counterItems = response;
-    const counterItemDiv = document.querySelector('.CounterItemS');
-    counterItems.forEach(item => {
-      const div = document.createElement('div');
-      div.classList.add('CounterListItem');
-      expiry = item[2].substring(0, 10);
-      div.textContent = `${item[0]},  Expiry at ${expiry}`;
-      counterItemDiv.appendChild(div);
-    });
-  })
-  .catch(error => console.error('Error:', error));
-
-  fetch('/get_PantryItemS_list', {method:'GET'})
-  .then(response => response.json())
-  .then(pantryItems => {
-    const counterItemDiv = document.querySelector('.PantryItemS');
-    pantryItems.forEach(item => {
-      const div = document.createElement('div');
-      div.classList.add('PantryListItem');
-      expiry = item[2].substring(0, 10);
-      div.textContent = `${item[0]},  Expiry at ${expiry}`;
-      counterItemDiv.appendChild(div);
-    });
-  })
-  .catch(error => console.error('Error:', error));
-
-  fetch('/get_ShoppingListS_list', {method:'GET'})
-  .then(response => response.json())
-  .then(shoppingList => {
-    const counterItemDiv = document.querySelector('.ShoppingListS');
-    shoppingList.forEach(item => {
-      const div = document.createElement('div');
-      div.classList.add('ShoppingListItem');
-      expiry = item[2].substring(0, 10);
-      div.textContent = `${item[0]},  Expiry at ${expiry}`;
-      counterItemDiv.appendChild(div);
+      listDiv.appendChild(div);
     });
   })
   .catch(error => console.error('Error:', error));
 }
 
-
 //helper function for delete
-
 function deleteItem(itemName, listSelect) {
   const confirmation = confirm(`Are you sure you want to delete ${itemName}?`);
   if (confirmation) {
@@ -143,7 +113,7 @@ function fetch_list(section){
   return listData;
 }
 
-// populate individual sections
+// populate individual sections in viewrecipe.html
 function populateViewData() {
   const urlParams = new URLSearchParams(window.location.search);
   const listParam = urlParams.get('list');
@@ -341,39 +311,166 @@ function populateViewData() {
     }
   
     window.location.reload();
-  });
+  }
   
   
+// this is giving an error
+// const updateButton = document.querySelector('.updateButton');
+// updateButton.addEventListener('click', () => {
+//   let listData = JSON.parse(localStorage.getItem(listParam) || '[]');
+//   console.log('Retrieved listData:', listData);
 
-  const updateButton = document.querySelector('.updateButton');
-updateButton.addEventListener('click', () => {
-  let listData = JSON.parse(localStorage.getItem(listParam) || '[]');
-  console.log('Retrieved listData:', listData);
+//   const items = document.querySelectorAll('.grocery-list .item');
+//   console.log(items);
 
-  const items = document.querySelectorAll('.grocery-list .item');
-  console.log(items);
+//   items.forEach((item, index) => {
+//     const updatedNameElement = item.querySelector('.inputBox');
+//     const updatedName = updatedNameElement ? updatedNameElement.value : '';
 
-  items.forEach((item, index) => {
-    const updatedNameElement = item.querySelector('.inputBox');
-    const updatedName = updatedNameElement ? updatedNameElement.value : '';
+//     const updatedDateAddedElement = item.querySelector('.dateAdded');
+//     const updatedDateAdded = updatedDateAddedElement ? updatedDateAddedElement.value : '';
 
-    const updatedDateAddedElement = item.querySelector('.dateAdded');
-    const updatedDateAdded = updatedDateAddedElement ? updatedDateAddedElement.value : '';
+//     const updatedDateExpireElement = item.querySelector('.dateExpire');
+//     const updatedDateExpire = updatedDateExpireElement ? updatedDateExpireElement.value : '';
 
-    const updatedDateExpireElement = item.querySelector('.dateExpire');
-    const updatedDateExpire = updatedDateExpireElement ? updatedDateExpireElement.value : '';
+//     listData[index].name = updatedName;
+//     listData[index].dateAdded = updatedDateAdded;
+//     listData[index].dateExpire = updatedDateExpire;
+//   });
 
-    listData[index].name = updatedName;
-    listData[index].dateAdded = updatedDateAdded;
-    listData[index].dateExpire = updatedDateExpire;
+//   console.log('Updated listData:', listData);
+
+//   localStorage.setItem(listParam, JSON.stringify(listData));
+
+//   window.location.reload();
+// });
+
+function fetchProductData(barcodeVal) {
+  // Make an AJAX request to fetch the product data from the API
+  // const url = `https://api.example.com/products/${barcode}`;
+  // const url = '/barcode'; // Replace with the appropriate URL of your server endpoint
+  
+  // const data = {
+  //   barcodes: barcode
+  // };
+
+  // const requestOptions = {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   },
+  //   body: JSON.stringify(data)
+  // };
+
+  // return fetch(url, requestOptions)
+  //   .then(response => response.json())
+  //   .then(response => {
+  //     // Handle the response here
+  //     console.log(response);
+  //   })
+  //   .catch(error => {
+  //     // Handle any error that occurred during the request
+  //     console.error('Error:', error);
+  //   });
+
+  url = '/barcode'
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ barcode: barcodeVal })
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response from the server
+      console.log(data);
+
+      const queryString = Object.keys(data)
+        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+        .join('&');
+
+      // Construct the URL for the target page with the query string
+      const redirectUrl = '/CreateRecipe.html?' + queryString;
+
+// Redirect to the target page
+window.location.href = redirectUrl;
+
+    })
+    .catch(error => {
+      // Handle any errors that occurred during the request
+      console.error('Error:', error);
+    });
+
+}
+
+function openCamera() {
+  // Get the video element
+  const video = document.createElement('video');
+  video.setAttribute('class', 'camera');
+  video.style.width = '90%'; // Set the video width to 90% of the screen
+
+  // Check if the browser supports getUserMedia
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(function(stream) {
+        // Set the video source and start scanning
+        video.srcObject = stream;
+        video.play();
+        startBarcodeScanner();
+      })
+      .catch(function(error) {
+        console.error('Error accessing camera:', error);
+      });
+  } else {
+    console.error('getUserMedia not supported');
+  }
+
+  // Create a canvas element to render the scanned barcode
+  const canvas = document.createElement('canvas');
+  canvas.setAttribute('id', 'barcode-canvas');
+  canvas.style.display = 'none';
+
+  // Append the video and canvas elements to the document body
+  document.body.appendChild(video);
+  document.body.appendChild(canvas);
+}
+
+
+
+function startBarcodeScanner() {
+  Quagga.init({
+    inputStream: {
+      name: 'Live',
+      type: 'LiveStream',
+      target: '#camera-preview',
+      constraints: {
+        facingMode: 'environment' // Use the back camera
+      },
+    },
+    decoder: {
+      readers: ['ean_reader'] // Specify the barcode type to scan (e.g., EAN)
+    }
+  }, function(err) {
+    if (err) {
+      console.error('Error initializing Quagga:', err);
+      return;
+    }
+    Quagga.start();
   });
 
-  console.log('Updated listData:', listData);
+  Quagga.onDetected(function(result) {
+    // Handle the detected barcode here
+    const barcode = result.codeResult.code;
+    console.log('Barcode detected:', barcode);
+    console.log(typeof(barcode));
 
-  localStorage.setItem(listParam, JSON.stringify(listData));
+    // Fetch the product data from the API
+    fetchProductData(barcode);
 
-  window.location.reload();
-});
-
+    // Stop the scanner after the first successful scan
+    Quagga.stop();
+  });
 
 }

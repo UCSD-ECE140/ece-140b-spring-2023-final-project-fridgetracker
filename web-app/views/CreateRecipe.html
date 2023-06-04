@@ -51,7 +51,7 @@
           <button class="delete" onclick="window.location.href='./HomeScreen.html'" style="background-color: transparent; border-width:0rem">
             <img class="delete" src="../static/delete.png" style="background-color: transparent; border-width:0rem">
           </button>
-          <button class="camera" onclick="openCamera()">
+          <button class="camera" onclick="window.location.href='./cam.html'">
             <img class="camera" style="background-color: transparent; border-width:0rem" src="../static/camera.png" alt="Camera">
           </button>
         </div>
@@ -60,6 +60,16 @@
     </div>
   </body>
   <script>
+    // Parse the query parameter from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const product = urlParams.get('product');
+
+    // Update the product name field if the query parameter is present
+    if (product) {
+      const productNameInput = document.querySelector('input[name="ProductBrand"]');
+      productNameInput.value = product;
+    }
+    
     // make sure add, expire dates are not null
     var theAddDate = new Date().toISOString().substring(0, 10);
     document.getElementById('add_date_input').value = theAddDate;
