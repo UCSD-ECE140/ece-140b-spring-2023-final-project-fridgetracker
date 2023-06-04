@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles       # for serving static files
 # for generating HTML from templatized files
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import mysql.connector
 from dotenv import load_dotenv
@@ -25,7 +26,7 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 # specify where the HTML files are located
 views = Jinja2Templates(directory='views')
-
+templates = Jinja2Templates(directory="templates")
 # Define a Pydantic model for the item data
 
 
@@ -97,7 +98,9 @@ def get_createrecipe() -> HTMLResponse:
 def get_camera() -> HTMLResponse:
     with open("views/cam.html") as html:
         return HTMLResponse(content=html.read())
-    
+ 
+ 
+  #test  
 @app.get("/test.html", response_class=HTMLResponse)
 def get_camera() -> HTMLResponse:
     with open("views/test.html") as html:
