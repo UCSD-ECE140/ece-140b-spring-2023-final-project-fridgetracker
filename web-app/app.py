@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles       # for serving static files
 # for generating HTML from templatized files
 from fastapi.templating import Jinja2Templates
@@ -47,6 +47,16 @@ barcodes = [0]*5
 
 frame = 0
 enable = 0
+
+
+def gen_frames():
+    while True:
+        if enable:
+            cv2.normalize(frame, frame, 50, 255, cv2.NORM_MINMAX)
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -217,6 +227,10 @@ async def cv_barcode_get():
 
                     return productdata['title']
                 
+@app.get('/video_feed')
+def video_feed():
+    return StreamingResponse(gen_frames(), media_type='multipart/x-mixed-replace; boundary=frame') 
+
 
 # @app.post("/barcode")
 # def retrieve_barcode_info(barcodes):
