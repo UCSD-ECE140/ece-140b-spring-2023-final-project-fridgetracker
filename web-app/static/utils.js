@@ -313,7 +313,15 @@ function populateViewData() {
     window.location.reload();
   }
   
-  
+  function fetchVideoFeed(){
+    fetch('/barcode')
+    .then(response => response.json())
+    .then(result => {
+        console.log(result);
+    })
+    .catch(error => console.error(error));
+    // window.location.reload();
+}
 // this is giving an error
 // const updateButton = document.querySelector('.updateButton');
 // updateButton.addEventListener('click', () => {
@@ -343,134 +351,107 @@ function populateViewData() {
 //   localStorage.setItem(listParam, JSON.stringify(listData));
 
 //   window.location.reload();
-// });
+// // });
 
-function fetchProductData(barcodeVal) {
-  // Make an AJAX request to fetch the product data from the API
-  // const url = `https://api.example.com/products/${barcode}`;
-  // const url = '/barcode'; // Replace with the appropriate URL of your server endpoint
-  
-  // const data = {
-  //   barcodes: barcode
-  // };
+// function fetchProductData(barcodeVal) {
+//   url = '/barcode'
 
-  // const requestOptions = {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  //   },
-  //   body: JSON.stringify(data)
-  // };
+//   fetch(url, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({ barcode: barcodeVal })
+//   })
+//     .then(response => response.json())
+//     .then(data => {
+//       // Handle the response from the server
+//       console.log(data);
 
-  // return fetch(url, requestOptions)
-  //   .then(response => response.json())
-  //   .then(response => {
-  //     // Handle the response here
-  //     console.log(response);
-  //   })
-  //   .catch(error => {
-  //     // Handle any error that occurred during the request
-  //     console.error('Error:', error);
-  //   });
+//       const queryString = Object.keys(data)
+//         .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+//         .join('&');
 
-  url = '/barcode'
+//       // Construct the URL for the target page with the query string
+//       const redirectUrl = '/CreateRecipe.html?' + queryString;
 
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ barcode: barcodeVal })
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Handle the response from the server
-      console.log(data);
+// // Redirect to the target page
+// window.location.href = redirectUrl;
 
-      const queryString = Object.keys(data)
-        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-        .join('&');
+//     })
+//     .catch(error => {
+//       // Handle any errors that occurred during the request
+//       console.error('Error:', error);
+//     });
 
-      // Construct the URL for the target page with the query string
-      const redirectUrl = '/CreateRecipe.html?' + queryString;
+// }
 
-// Redirect to the target page
-window.location.href = redirectUrl;
+// function openCamera() {
+//   // Get the video element
+//   const video = document.createElement('video');
+//   video.setAttribute('class', 'camera');
+//   video.style.width = '90%'; // Set the video width to 90% of the screen
 
-    })
-    .catch(error => {
-      // Handle any errors that occurred during the request
-      console.error('Error:', error);
-    });
+//   // Check if the browser supports getUserMedia
+//   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+//     navigator.mediaDevices.getUserMedia({ video: true })
+//       .then(function(stream) {
+//         // Set the video source and start scanning
+//         video.srcObject = stream;
+//         video.play();
+//         startBarcodeScanner();
+//       })
+//       .catch(function(error) {
+//         console.error('Error accessing camera:', error);
+//       });
+//   } else {
+//     console.error('getUserMedia not supported');
+//   }
 
-}
+//   // Create a canvas element to render the scanned barcode
+//   const canvas = document.createElement('canvas');
+//   canvas.setAttribute('id', 'barcode-canvas');
+//   canvas.style.display = 'none';
 
-function openCamera() {
-  // Get the video element
-  const video = document.createElement('video');
-  video.setAttribute('class', 'camera');
-  video.style.width = '90%'; // Set the video width to 90% of the screen
-
-  // Check if the browser supports getUserMedia
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(function(stream) {
-        // Set the video source and start scanning
-        video.srcObject = stream;
-        video.play();
-        startBarcodeScanner();
-      })
-      .catch(function(error) {
-        console.error('Error accessing camera:', error);
-      });
-  } else {
-    console.error('getUserMedia not supported');
-  }
-
-  // Create a canvas element to render the scanned barcode
-  const canvas = document.createElement('canvas');
-  canvas.setAttribute('id', 'barcode-canvas');
-  canvas.style.display = 'none';
-
-  // Append the video and canvas elements to the document body
-  document.body.appendChild(video);
-  document.body.appendChild(canvas);
-}
+//   // Append the video and canvas elements to the document body
+//   document.body.appendChild(video);
+//   document.body.appendChild(canvas);
+// }
 
 
 
-function startBarcodeScanner() {
-  Quagga.init({
-    inputStream: {
-      name: 'Live',
-      type: 'LiveStream',
-      target: '#camera-preview',
-      constraints: {
-        facingMode: 'environment' // Use the back camera
-      },
-    },
-    decoder: {
-      readers: ['ean_reader'] // Specify the barcode type to scan (e.g., EAN)
-    }
-  }, function(err) {
-    if (err) {
-      console.error('Error initializing Quagga:', err);
-      return;
-    }
-    Quagga.start();
-  });
+// function startBarcodeScanner() {
+//   Quagga.init({
+//     inputStream: {
+//       name: 'Live',
+//       type: 'LiveStream',
+//       target: '#camera-preview',
+//       constraints: {
+//         facingMode: 'environment' // Use the back camera
+//       },
+//     },
+//     decoder: {
+//       readers: ['ean_reader'] // Specify the barcode type to scan (e.g., EAN)
+//     }
+//   }, function(err) {
+//     if (err) {
+//       console.error('Error initializing Quagga:', err);
+//       return;
+//     }
+//     Quagga.start();
+//   });
 
-  Quagga.onDetected(function(result) {
-    // Handle the detected barcode here
-    const barcode = result.codeResult.code;
-    console.log('Barcode detected:', barcode);
-    console.log(typeof(barcode));
+//   Quagga.onDetected(function(result) {
+//     // Handle the detected barcode here
+//     const barcode = result.codeResult.code;
+//     console.log('Barcode detected:', barcode);
+//     console.log(typeof(barcode));
 
-    // Fetch the product data from the API
-    fetchProductData(barcode);
+//     // Fetch the product data from the API
+//     fetchProductData(barcode);
 
-    // Stop the scanner after the first successful scan
-    Quagga.stop();
-  });
+//     // Stop the scanner after the first successful scan
+//     Quagga.stop();
+//   });
 
-}
+// }

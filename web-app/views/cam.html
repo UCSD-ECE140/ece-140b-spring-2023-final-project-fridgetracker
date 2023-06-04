@@ -17,6 +17,8 @@
     <!-- <button onclick="scanBarcode()">Scan Barcode</button> -->
     <button  class="camera" onclick="openCamera()" alt="Camera" > SCAN
     </button>
-    <div id="product-name"></div>
+    <div class="video_grid">
+      <img id="video" src="{{ url_for('video_feed') }}" width="50%">
+    </div>
   </body>
 </html>
