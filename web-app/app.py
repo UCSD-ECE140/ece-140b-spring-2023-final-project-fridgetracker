@@ -197,9 +197,9 @@ def login_user(user: UserLogin):
 
 @app.get('/video_feed')
 async def video_feed():
-    global frame, enable
+    global cap
 
-    def gen_frames():
+    async def gen_frames():
         while True:
             ret, frame = cap.read()
             if ret:
@@ -212,39 +212,27 @@ async def video_feed():
 
 @app.get('/getbarcode')
 async def cv_barcode_get():
-    global frame, enable
+    global cap, barcodes
 
-    enable = 1
+    enable = True
 
-    while True:
-        video_feed()
+    while enable:
         ret, frame = cap.read()
         if ret:
             ret_bc, decoded_info, _, points = bd.detectAndDecode(frame)
             if ret_bc:
-
                 for s, p in zip(decoded_info, points):
-
-                    # if a valid barcode value is found
                     if s:
-                        # shift data through a 5 element list each time a new barcode is detected, with the newest barcode at index 0
-                        # and the oldest at index 4. If a new barcode is detected, the list shifts up by one (data @ index 0 -> index 1),
-                        # the barcode previously at index 4 is discarded, and the new barcode is added at index 0
-                        for i in reversed(range(len(barcodes))):
-                            barcodes[i] = barcodes[i-1]
-                        barcodes[0] = s
+                        barcodes = [s] + barcodes[:-1]
 
-                # if all elements in the barcodes list are the same (aka the scanner has scanned the same barcode number 5 times in a row)
                 if len(set(barcodes)) == 1:
-                    # retrieve product data from api
                     rawdata = requests.get(
-                        'https://api.barcodelookup.com/v3/products?barcode=%s&key=6zusy8frdfgq2uriti6lu5v74ws6n5' % barcodes[0]).json()
+                        'https://api.barcodelookup.com/v3/products?barcode=%s&key=YOUR_API_KEY' % barcodes[0]).json()
                     productdata = rawdata['products'][0]
 
-                    enable = 0
+                    enable = False
 
                     return productdata['title']
-
 
 # @app.get('/video_feed')
 # def video_feed():

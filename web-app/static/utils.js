@@ -313,27 +313,20 @@ function populateViewData() {
     window.location.reload();
   }
   
-  function fetchVideoFeed(){
+  function fetchVideoFeed() {
     fetch('/getbarcode')
-    .then(response => response.json())
-    .then(data => {
+      .then(response => response.json())
+      .then(data => {
         console.log(data);
         const queryString = Object.keys(data)
-        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-        .join('&');
-
-      // Construct the URL for the target page with the query string
-      const redirectUrl = '/CreateRecipe.html?' + queryString;
-
-// Redirect to the target page
-window.location.href = redirectUrl;
-
-    })
-    .catch(error => {
-      // Handle any errors that occurred during the request
-      console.error('Error:', error);
-    });
-    
+          .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+          .join('&');
+        const redirectUrl = '/CreateRecipe.html?' + queryString;
+        window.location.href = redirectUrl;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
 // this is giving an error
 // const updateButton = document.querySelector('.updateButton');
