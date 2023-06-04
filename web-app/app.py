@@ -211,26 +211,44 @@ async def video_feed():
     return StreamingResponse(gen_frames(), media_type='multipart/x-mixed-replace; boundary=frame')
 
 @app.get('/getbarcode')
-async def get_barcode(barcode: str = Form(...)):
-    global enable, frame, barcodes
+async def cv_barcode_get():
+    global frame, enable
 
     enable = 1
-    productdata = None
 
-    while enable:
+    while True:
+        video_feed()
         ret, frame = cap.read()
         if ret:
-            decoded_objects = pyzbar.decode(frame)
-            for obj in decoded_objects:
-                if obj.data.decode() == barcode:
-                    rawdata = requests.get('https://api.barcodelookup.com/v3/products?barcode=%s&key=6zusy8frdfgq2uriti6lu5v74ws6n5' % barcode).json()
-                    if rawdata and 'products' in rawdata:
-                        productdata = rawdata['products'][0]
+            ret_bc, decoded_info, _, points = bd.detectAndDecode(frame)
+            if ret_bc:
+
+                for s, p in zip(decoded_info, points):
+
+                    # if a valid barcode value is found
+                    if s:
+                        # shift data through a 5 element list each time a new barcode is detected, with the newest barcode at index 0
+                        # and the oldest at index 4. If a new barcode is detected, the list shifts up by one (data @ index 0 -> index 1),
+                        # the barcode previously at index 4 is discarded, and the new barcode is added at index 0
+                        for i in reversed(range(len(barcodes))):
+                            barcodes[i] = barcodes[i-1]
+                        barcodes[0] = s
+
+                # if all elements in the barcodes list are the same (aka the scanner has scanned the same barcode number 5 times in a row)
+                if len(set(barcodes)) == 1:
+                    # retrieve product data from api
+                    rawdata = requests.get(
+                        'https://api.barcodelookup.com/v3/products?barcode=%s&key=6zusy8frdfgq2uriti6lu5v74ws6n5' % barcodes[0]).json()
+                    productdata = rawdata['products'][0]
+
                     enable = 0
-                    break
 
-    return productdata
+                    return productdata['title']
 
+
+# @app.get('/video_feed')
+# def video_feed():
+#     return StreamingResponse(gen_frames(), media_type='multipart/x-mixed-replace; boundary=frame')
 
 
 # @app.post("/barcode")
