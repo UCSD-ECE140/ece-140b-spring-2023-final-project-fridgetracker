@@ -73,7 +73,11 @@ def get_createrecipe() -> HTMLResponse:
 def get_camera() -> HTMLResponse:
     with open("views/cam.html") as html:
         return HTMLResponse(content=html.read())
-
+    
+@app.get("/test.html", response_class=HTMLResponse)
+def get_camera() -> HTMLResponse:
+    with open("views/test.html") as html:
+        return HTMLResponse(content=html.read())
 
 # Render the HomeScreen.html template
 @app.get("/HomeScreen.html", response_class=HTMLResponse)
