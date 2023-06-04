@@ -321,7 +321,7 @@ function populateViewData() {
     })
     .catch(error => console.error(error));
     // window.location.reload();
-}
+  }
 // this is giving an error
 // const updateButton = document.querySelector('.updateButton');
 // updateButton.addEventListener('click', () => {
@@ -417,7 +417,7 @@ function populateViewData() {
 //   document.body.appendChild(video);
 //   document.body.appendChild(canvas);
 // }
-
+// 
 
 
 // function startBarcodeScanner() {
