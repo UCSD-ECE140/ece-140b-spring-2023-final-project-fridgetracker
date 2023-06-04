@@ -94,12 +94,11 @@ def get_createrecipe() -> HTMLResponse:
 
 
 @app.get("/cam.html", response_class=HTMLResponse)
-def get_camera() -> HTMLResponse:
-    with open("views/cam.html") as html:
-        return HTMLResponse(content=html.read())
+def get_camera(request: Request) -> HTMLResponse:
+    return views.TemplateResponse("cam.html", {"request": request})
     
 @app.get("/test.html", response_class=HTMLResponse)
-def get_camera() -> HTMLResponse:
+def get_camera():
     with open("views/test.html") as html:
         return HTMLResponse(content=html.read())
 
