@@ -60,6 +60,16 @@
     </div>
   </body>
   <script>
+    // Parse the query parameter from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const product = urlParams.get('product');
+
+    // Update the product name field if the query parameter is present
+    if (product) {
+      const productNameInput = document.querySelector('input[name="ProductBrand"]');
+      productNameInput.value = product;
+    }
+    
     // make sure add, expire dates are not null
     var theAddDate = new Date().toISOString().substring(0, 10);
     document.getElementById('add_date_input').value = theAddDate;

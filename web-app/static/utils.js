@@ -344,58 +344,72 @@ function populateViewData() {
 
 //   window.location.reload();
 // });
-// function openCamera() {
-//   // Check if the browser supports the getUserMedia API
-//   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-//     // Request access to the camera
-//     navigator.mediaDevices.getUserMedia({ video: true })
-//       .then(function (stream) {
-//         // Camera access granted, do something with the stream
-//         const videoElement = document.createElement('video');
-//         videoElement.srcObject = stream;
-//         videoElement.autoplay = true;
-//         document.body.appendChild(videoElement);
 
-//         // Use a barcode scanning library (e.g., QuaggaJS, ZXing) to scan barcodes from the camera stream
-//         // Implement barcode scanning functionality here
-
-//       })
-//       .catch(function (error) {
-//         // Camera access denied or an error occurred
-//         console.error('Error accessing camera:', error);
-//       });
-//   } else {
-//     // Browser doesn't support getUserMedia
-//     console.error('getUserMedia API not supported');
-//   }
-// }
-function fetchProductData(barcode) {
+function fetchProductData(barcodeVal) {
   // Make an AJAX request to fetch the product data from the API
-  const url = `https://api.example.com/products/${barcode}`;
-  // Replace `https://api.example.com/products` with the actual API endpoint URL
+  // const url = `https://api.example.com/products/${barcode}`;
+  // const url = '/barcode'; // Replace with the appropriate URL of your server endpoint
+  
+  // const data = {
+  //   barcodes: barcode
+  // };
 
-  fetch(url)
-    .then(function(response) {
-      if (!response.ok) {
-        throw new Error('Error fetching product data');
-      }
-      return response.json();
-    })
-    .then(function(data) {
-      // Access the product name from the response data
-      const productName = data.name;
+  // const requestOptions = {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   },
+  //   body: JSON.stringify(data)
+  // };
 
-      // Display the product name on the page
-      document.getElementById('product-name').textContent = productName;
+  // return fetch(url, requestOptions)
+  //   .then(response => response.json())
+  //   .then(response => {
+  //     // Handle the response here
+  //     console.log(response);
+  //   })
+  //   .catch(error => {
+  //     // Handle any error that occurred during the request
+  //     console.error('Error:', error);
+  //   });
+
+  url = '/barcode'
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ barcode: barcodeVal })
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response from the server
+      console.log(data);
+
+      const queryString = Object.keys(data)
+        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+        .join('&');
+
+      // Construct the URL for the target page with the query string
+      const redirectUrl = '/CreateRecipe.html?' + queryString;
+
+// Redirect to the target page
+window.location.href = redirectUrl;
+
     })
-    .catch(function(error) {
+    .catch(error => {
+      // Handle any errors that occurred during the request
       console.error('Error:', error);
     });
+
 }
+
 function openCamera() {
   // Get the video element
   const video = document.createElement('video');
-  video.setAttribute('id', 'camera-preview');
+  video.setAttribute('class', 'camera');
+  video.style.width = '90%'; // Set the video width to 90% of the screen
 
   // Check if the browser supports getUserMedia
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -423,6 +437,8 @@ function openCamera() {
   document.body.appendChild(canvas);
 }
 
+
+
 function startBarcodeScanner() {
   Quagga.init({
     inputStream: {
@@ -448,6 +464,7 @@ function startBarcodeScanner() {
     // Handle the detected barcode here
     const barcode = result.codeResult.code;
     console.log('Barcode detected:', barcode);
+    console.log(typeof(barcode));
 
     // Fetch the product data from the API
     fetchProductData(barcode);
