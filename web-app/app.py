@@ -37,7 +37,6 @@ class Item(BaseModel):
     expiredDate: str
 
 
-
 camera_id = 0   # default value is 0 if you only have one camera
 delay = 1
 
@@ -51,13 +50,12 @@ enable = 0
 
 
 def gen_frames():
-    while True:
-        if enable:
-            cv2.normalize(frame, frame, 50, 255, cv2.NORM_MINMAX)
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    if enable:
+        cv2.normalize(frame, frame, 50, 255, cv2.NORM_MINMAX)
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -97,13 +95,16 @@ def get_createrecipe() -> HTMLResponse:
 @app.get("/cam.html", response_class=HTMLResponse)
 def get_camera(request: Request):
     return views.TemplateResponse("cam.html", {"request": request})
-    
+
+
 @app.get("/test.html", response_class=HTMLResponse)
 def get_camera():
     with open("views/test.html") as html:
         return HTMLResponse(content=html.read())
 
 # Render the HomeScreen.html template
+
+
 @app.get("/HomeScreen.html", response_class=HTMLResponse)
 def home_screen(request: Request):
     return views.TemplateResponse("/HomeScreen.html", {"request": request})
@@ -194,6 +195,7 @@ def login_user(user: UserLogin):
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+
 @app.get('/getbarcode')
 async def cv_barcode_get():
     global frame, enable
@@ -201,15 +203,16 @@ async def cv_barcode_get():
     enable = 1
 
     while True:
+        video_feed()
         ret, frame = cap.read()
         if ret:
             ret_bc, decoded_info, _, points = bd.detectAndDecode(frame)
             if ret_bc:
-                
+
                 for s, p in zip(decoded_info, points):
-                    
+
                     # if a valid barcode value is found
-                    if s:                    
+                    if s:
                         # shift data through a 5 element list each time a new barcode is detected, with the newest barcode at index 0
                         # and the oldest at index 4. If a new barcode is detected, the list shifts up by one (data @ index 0 -> index 1),
                         # the barcode previously at index 4 is discarded, and the new barcode is added at index 0
@@ -220,16 +223,18 @@ async def cv_barcode_get():
                 # if all elements in the barcodes list are the same (aka the scanner has scanned the same barcode number 5 times in a row)
                 if len(set(barcodes)) == 1:
                     # retrieve product data from api
-                    rawdata = requests.get('https://api.barcodelookup.com/v3/products?barcode=%s&key=6zusy8frdfgq2uriti6lu5v74ws6n5' % barcodes[0]).json()
+                    rawdata = requests.get(
+                        'https://api.barcodelookup.com/v3/products?barcode=%s&key=6zusy8frdfgq2uriti6lu5v74ws6n5' % barcodes[0]).json()
                     productdata = rawdata['products'][0]
-                    
+
                     enable = 0
 
                     return productdata['title']
-                
+
+
 @app.get('/video_feed')
 def video_feed():
-    return StreamingResponse(gen_frames(), media_type='multipart/x-mixed-replace; boundary=frame') 
+    return StreamingResponse(gen_frames(), media_type='multipart/x-mixed-replace; boundary=frame')
 
 
 # @app.post("/barcode")
