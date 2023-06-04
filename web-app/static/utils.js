@@ -344,3 +344,116 @@ function populateViewData() {
 
 //   window.location.reload();
 // });
+// function openCamera() {
+//   // Check if the browser supports the getUserMedia API
+//   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+//     // Request access to the camera
+//     navigator.mediaDevices.getUserMedia({ video: true })
+//       .then(function (stream) {
+//         // Camera access granted, do something with the stream
+//         const videoElement = document.createElement('video');
+//         videoElement.srcObject = stream;
+//         videoElement.autoplay = true;
+//         document.body.appendChild(videoElement);
+
+//         // Use a barcode scanning library (e.g., QuaggaJS, ZXing) to scan barcodes from the camera stream
+//         // Implement barcode scanning functionality here
+
+//       })
+//       .catch(function (error) {
+//         // Camera access denied or an error occurred
+//         console.error('Error accessing camera:', error);
+//       });
+//   } else {
+//     // Browser doesn't support getUserMedia
+//     console.error('getUserMedia API not supported');
+//   }
+// }
+function fetchProductData(barcode) {
+  // Make an AJAX request to fetch the product data from the API
+  const url = `https://api.example.com/products/${barcode}`;
+  // Replace `https://api.example.com/products` with the actual API endpoint URL
+
+  fetch(url)
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Error fetching product data');
+      }
+      return response.json();
+    })
+    .then(function(data) {
+      // Access the product name from the response data
+      const productName = data.name;
+
+      // Display the product name on the page
+      document.getElementById('product-name').textContent = productName;
+    })
+    .catch(function(error) {
+      console.error('Error:', error);
+    });
+}
+function openCamera() {
+  // Get the video element
+  const video = document.createElement('video');
+  video.setAttribute('id', 'camera-preview');
+
+  // Check if the browser supports getUserMedia
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(function(stream) {
+        // Set the video source and start scanning
+        video.srcObject = stream;
+        video.play();
+        startBarcodeScanner();
+      })
+      .catch(function(error) {
+        console.error('Error accessing camera:', error);
+      });
+  } else {
+    console.error('getUserMedia not supported');
+  }
+
+  // Create a canvas element to render the scanned barcode
+  const canvas = document.createElement('canvas');
+  canvas.setAttribute('id', 'barcode-canvas');
+  canvas.style.display = 'none';
+
+  // Append the video and canvas elements to the document body
+  document.body.appendChild(video);
+  document.body.appendChild(canvas);
+}
+
+function startBarcodeScanner() {
+  Quagga.init({
+    inputStream: {
+      name: 'Live',
+      type: 'LiveStream',
+      target: '#camera-preview',
+      constraints: {
+        facingMode: 'environment' // Use the back camera
+      },
+    },
+    decoder: {
+      readers: ['ean_reader'] // Specify the barcode type to scan (e.g., EAN)
+    }
+  }, function(err) {
+    if (err) {
+      console.error('Error initializing Quagga:', err);
+      return;
+    }
+    Quagga.start();
+  });
+
+  Quagga.onDetected(function(result) {
+    // Handle the detected barcode here
+    const barcode = result.codeResult.code;
+    console.log('Barcode detected:', barcode);
+
+    // Fetch the product data from the API
+    fetchProductData(barcode);
+
+    // Stop the scanner after the first successful scan
+    Quagga.stop();
+  });
+
+}

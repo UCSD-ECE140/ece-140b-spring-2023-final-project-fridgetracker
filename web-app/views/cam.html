@@ -3,16 +3,20 @@
   <head>
     <meta charset="UTF-8">
     <title>Camera</title>
-    <script>
-      // Function to handle the barcode scanning
-      function scanBarcode() {
-        // Code to open the camera and scan the barcode
-        // Handle the scanned barcode data
-      }
-    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="icon" href="../static/logo_fr.jpg">
+    <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000000">
+    <link rel="stylesheet" href="../static/createrecipe.css">
+    <script src="../static/utils.js" defer></script>
+
   </head>
   <body>
     <h1>Camera</h1>
-    <button onclick="scanBarcode()">Scan Barcode</button>
+    <!-- <button onclick="scanBarcode()">Scan Barcode</button> -->
+    <button  class="camera" onclick="openCamera()" alt="Camera" > SCAN
+    </button>
+    <div id="product-name"></div>
   </body>
 </html>
