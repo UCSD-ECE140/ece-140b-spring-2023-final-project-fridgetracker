@@ -316,11 +316,24 @@ function populateViewData() {
   function fetchVideoFeed(){
     fetch('/getbarcode')
     .then(response => response.json())
-    .then(result => {
-        console.log(result);
+    .then(data => {
+        console.log(data);
+        const queryString = Object.keys(data)
+        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+        .join('&');
+
+      // Construct the URL for the target page with the query string
+      const redirectUrl = '/CreateRecipe.html?' + queryString;
+
+// Redirect to the target page
+window.location.href = redirectUrl;
+
     })
-    .catch(error => console.error(error));
-    // window.location.reload();
+    .catch(error => {
+      // Handle any errors that occurred during the request
+      console.error('Error:', error);
+    });
+    
   }
 // this is giving an error
 // const updateButton = document.querySelector('.updateButton');
