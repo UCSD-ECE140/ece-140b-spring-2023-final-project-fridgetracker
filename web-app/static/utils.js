@@ -314,7 +314,7 @@ function populateViewData() {
   }
   
   function fetchVideoFeed(){
-    fetch('/barcode')
+    fetch('/getbarcode')
     .then(response => response.json())
     .then(result => {
         console.log(result);

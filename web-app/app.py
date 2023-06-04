@@ -261,15 +261,15 @@ def video_feed():
 if __name__ == '__main__':
     import uvicorn
 
-    #uvicorn.run(app, host='192.168.0.34', port=8000)
+    uvicorn.run(app, host='192.168.0.38', port=8000)
     # uvicorn.run(app, host='100.80.240.83', port=8000)
-    uvicorn.run(
-        app,
-        host='192.168.0.34',
-        port=8000,
-        ssl_keyfile="key.pem",
-        ssl_certfile="cert.pem",
-    )
+    # uvicorn.run(
+    #     app,
+    #     host='192.168.0.34',
+    #     port=8000,
+    #     ssl_keyfile="key.pem",
+    #     ssl_certfile="cert.pem",
+    # )
 
     # 100.80.240.83
     #uvicorn.run(app, host='0.0.0.0', port=8000)
