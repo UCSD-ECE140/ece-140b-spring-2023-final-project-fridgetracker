@@ -34,7 +34,7 @@ while True:
             # if all elements in the barcodes list are the same (aka the scanner has scanned the same barcode number 5 times in a row)
             if len(set(barcodes)) == 1:
                 # retrieve product data from api
-                rawdata = requests.get('https://api.barcodelookup.com/v3/products?barcode=%s&key=27lavzpbu9png7o8dpuekaiosxq1d6' % barcodes[0]).json()
+                rawdata = requests.get('https://api.barcodelookup.com/v3/products?barcode=%s&key=6zusy8frdfgq2uriti6lu5v74ws6n5' % barcodes[0]).json()
                 productdata = rawdata['products'][0]
                 
                 # display product data

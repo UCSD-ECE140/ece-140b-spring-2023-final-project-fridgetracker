@@ -1,22 +1,27 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Camera</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="icon" href="../static/logo_fr.jpg">
-    <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#000000">
-    <link rel="stylesheet" href="../static/cam.css">
-    <script src="../static/utils.js" defer></script>
-    <script src="../static/quagga.min.js"></script>
-  </head>
-  <body>
-    <h1>Camera</h1>
-    <!-- <button onclick="scanBarcode()">Scan Barcode</button> -->
-    <button  class="camera" onclick="openCamera()" alt="Camera" > SCAN
-    </button>
-    <div id="product-name"></div>
-  </body>
-</html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Camera</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="icon" href="../static/logo_fr.jpg">
+        <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#000000">
+        <link rel="stylesheet" href="../static/cam.css">
+        <script src="../static/utils.js" defer></script>
+        <script src="../static/quagga.min.js"></script>
+      </head>
+      <body>
+        <h1>Camera</h1>
+        <button class="camera" onclick="fetchVideoFeed()" alt="Camera">SCAN</button>
+        <div class="video_grid">
+          <img id="video" src="/video_feed" width="50%">
+        </div>
+        <button class="backtorecipe" onclick="window.location.href='/CreateRecipe.html'">Back to Main</button>
+
+        <script>
+          
+        </script>
+      </body>
+    </html>
