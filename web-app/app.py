@@ -339,7 +339,7 @@ async def cv_barcode_get():
 if __name__ == '__main__':
     import uvicorn
 
-    uvicorn.run(app, host='192.168.0.38', port=8000)
+    # uvicorn.run(app, host='192.168.0.38', port=8000)
     # uvicorn.run(app, host='100.80.240.83', port=8000)
     # uvicorn.run(
     #     app,
@@ -350,4 +350,4 @@ if __name__ == '__main__':
     # )
 
     # 100.80.240.83
-    #uvicorn.run(app, host='0.0.0.0', port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=8000)
