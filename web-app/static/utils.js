@@ -88,13 +88,12 @@ function get_list_from_db(listName){
   .catch(error => console.error('Error:', error));
 }
 
-//helper function for delete
+// helper function for deleting item
 function deleteItem(itemName, listSelect) {
   const confirmation = confirm(`Are you sure you want to delete ${itemName}?`);
   if (confirmation) {
     const data = { listTage: listSelect, itemName: itemName };
     server_request('/delete_item', data, 'DELETE', function () {
-      // Remove the item from the DOM or perform any other necessary actions
       alert(`${itemName} deleted from ${listSelect}!`);
       location.reload(); // Refresh the page
     });
@@ -102,94 +101,55 @@ function deleteItem(itemName, listSelect) {
 }
 
 // helper function for fetch get route
-function fetch_list(section){
-  var listData;
-  fetch(`/get_${section}_list`, {method: 'GET'})
-  .then(response => response.json())
-  .then(theList => { 
-    listData = theList.json();
-  })
-  .catch(error => console.error('Error:', error));
+async function fetch_list(section) {
+  let listData = [];
+  try {
+    const response = await fetch(`/get_${section}_list`, { method: 'GET' });
+    const theList = await response.json();
+    listData = theList;
+  } catch (error) {
+    console.error('Error:', error);
+  }
   return listData;
 }
 
-// populate individual sections in viewrecipe.html
-function populateViewData() {
+
+// populate individual/all sections in viewrecipe.html
+async function populateViewData() {
+  // get section name from url
   const urlParams = new URLSearchParams(window.location.search);
   const listParam = urlParams.get('list');
+
+  // update html title to match section
   const nameInput = document.querySelector('.tiltle');
   nameInput.value = listParam;
-  let listData = [];
+  let listData;
 
-  if (listParam == "All") {
-    const fridgeListData = JSON.parse(localStorage.getItem("FridgeListS") || '[]');
-    const counterItemListData = JSON.parse(localStorage.getItem("CounterItemS") || '[]');
-    const pantryItemListData = JSON.parse(localStorage.getItem("PantryItemS") || '[]');
-    const shoppingListData = JSON.parse(localStorage.getItem("ShoppingListS") || '[]');
-    listData = listData.concat(fridgeListData, counterItemListData, pantryItemListData, shoppingListData);
-  } else {
-    listData = JSON.parse(localStorage.getItem(listParam) || '[]');
-  }
+  // get items list from db
+  listData = await fetch_list(listParam);
 
-  if (listParam === 'ShoppingListS') {
-    const groceryListDiv = document.querySelector('.grocery-list');
-    listData.forEach(item => {
-      const div = document.createElement('div');
-      div.className = 'item';
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.className = 'itemCheckbox';
-      const group1Div = document.createElement('div');
-      group1Div.className = 'group1';
-      const productNameInput = document.createElement('input');
-      productNameInput.type = 'text';
-      productNameInput.className = 'inputBox';
-      productNameInput.value = item.name;
-      const dateAddedInput = document.createElement('input');
-      dateAddedInput.type = 'date';
-      dateAddedInput.className = 'dateAdded';
-      dateAddedInput.value = item.dateAdded;
-      group1Div.appendChild(checkbox);
-      group1Div.appendChild(productNameInput);
-      group1Div.appendChild(dateAddedInput);
-      div.appendChild(group1Div);
-      groceryListDiv.appendChild(div);
-    });
-  } else {
-    const groceryListDiv = document.querySelector('.grocery-list');
-    listData.forEach(item => {
-      const div = document.createElement('div');
-      div.className = 'item';
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.className = 'itemCheckbox';
-      const group1Div = document.createElement('div');
-      group1Div.className = 'group1';
-      const productNameInput = document.createElement('input');
-      productNameInput.type = 'text';
-      productNameInput.className = 'inputBox';
-      productNameInput.value = item.name;
-      const dateAddedInput = document.createElement('input');
-      dateAddedInput.type = 'date';
-      dateAddedInput.className = 'dateAdded';
-      dateAddedInput.value = item.dateAdded;
-      const dateExpireInput = document.createElement('input');
-      dateExpireInput.type = 'date';
-      dateExpireInput.className = 'dateExpire';
-      dateExpireInput.value = item.dateExpire;
-      group1Div.appendChild(checkbox);
-      group1Div.appendChild(productNameInput);
-      group1Div.appendChild(dateAddedInput);
-      group1Div.appendChild(dateExpireInput);
-      div.appendChild(group1Div);
-      groceryListDiv.appendChild(div);
-    });
-  }
-  //sako
+  // populate lists using template
+  const groceryListDiv = document.querySelector('.grocery-list');
+  const theItemTemplate = document.querySelector('#item_template');
+  listData.forEach(item => {
+    // insert element into section list
+    groceryListDiv.insertAdjacentHTML('beforeend', theItemTemplate.innerHTML);
+    // update element with item information
+    let newItem = groceryListDiv.lastElementChild;
+    newItem.querySelector('.inputBox').value = item[0];
+    newItem.querySelector('.dateAdded').value = item[1].slice(0, 10);
+    if (listParam !== 'ShoppingListS'){
+      newItem.querySelector('.dateExpire').value = item[2].slice(0, 10);
+    }
+  });
+
+  // delete checked items functionality
+  let checkedItems = [];
+  const deleteButton = document.querySelector('.deleteButton');
   deleteButton.addEventListener('click', () => {
+
+    // keep track of all checked items to delete
     const checkboxes = document.querySelectorAll('.itemCheckbox');
-    const checkedItems = [];
-  
     checkboxes.forEach((checkbox, index) => {
       if (checkbox.checked) {
         const itemName = checkbox.parentElement.querySelector('.inputBox').value;
@@ -197,120 +157,100 @@ function populateViewData() {
       }
     });
   
+    // delete the checked items
     checkedItems.forEach((itemName) => {
       deleteItem(itemName, listSelect);
     });
   });
   
-  // const deleteButton = document.querySelector('.deleteButton');
-  // deleteButton.addEventListener('click', () => {
-  //   const checkboxes = document.querySelectorAll('.itemCheckbox');
-  //   const checkedItems = [];
-  
-  //   checkboxes.forEach((checkbox, index) => {
-  //     if (checkbox.checked) {
-  //       checkedItems.push(index);
-  //     }
-  //   });
-  
-    if (listParam === 'All') {
-      // Delete items from individual lists
-      
-      // local storage version
-      // const fridgeListData = JSON.parse(localStorage.getItem('FridgeListS') || '[]');
-      const counterItemListData = JSON.parse(localStorage.getItem('CounterItemS') || '[]');
-      const pantryItemListData = JSON.parse(localStorage.getItem('PantryItemS') || '[]');
-      const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
-  
-      // use a fetch request 
-      var fridgeListData;
-      fetch('/get_FridgeListS_list', {method: 'GET'})
-      .then(response => response.json())
-      .then(theFridgeList => { 
-        fridgeListData = theFridgeList.json();
-      })
-      .catch(error => console.error('Error:', error));
-      console.log(fridgeListData);
+  if (listParam === 'All') {
+    // Delete items from individual lists
+    // local storage version
+    // const fridgeListData = JSON.parse(localStorage.getItem('FridgeListS') || '[]');
+    // const counterItemListData = JSON.parse(localStorage.getItem('CounterItemS') || '[]');
+    // const pantryItemListData = JSON.parse(localStorage.getItem('PantryItemS') || '[]');
+    // const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
 
-      const deletedItems = [];
-  
-      checkedItems.forEach((index) => {
-        if (index < fridgeListData.length) {
-          const deletedItem = fridgeListData.splice(index - deletedItems.length, 1)[0];
-          deletedItems.push({
-            list: 'FridgeListS',
-            item: deletedItem
-          });
-        } else if (index < fridgeListData.length + counterItemListData.length) {
-          const deletedItem = counterItemListData.splice(index - fridgeListData.length - deletedItems.length, 1)[0];
-          deletedItems.push({
-            list: 'CounterItemS',
-            item: deletedItem
-          });
-        } else if (index < fridgeListData.length + counterItemListData.length + pantryItemListData.length) {
-          const deletedItem = pantryItemListData.splice(index - fridgeListData.length - counterItemListData.length - deletedItems.length, 1)[0];
-          deletedItems.push({
-            list: 'PantryItemS',
-            item: deletedItem
-          });
-        } else {
-          const deletedItem = shoppingListData.splice(index - fridgeListData.length - counterItemListData.length - pantryItemListData.length - deletedItems.length, 1)[0];
-          deletedItems.push({
-            list: 'ShoppingListS',
-            item: deletedItem
-          });
-        }
-      });
-  
-      localStorage.setItem('FridgeListS', JSON.stringify(fridgeListData));
-      localStorage.setItem('CounterItemS', JSON.stringify(counterItemListData));
-      localStorage.setItem('PantryItemS', JSON.stringify(pantryItemListData));
-      localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
-  
-      deletedItems.forEach((deletedItem) => {
-        const list = deletedItem.list;
-        const item = deletedItem.item;
-  
-        const addToShoppingList = confirm(`Do you want to add "${item.name}" to the ShoppingListS?`);
-  
-        if (addToShoppingList) {
-          const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
-          shoppingListData.push(item);
-          localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
-        }
-  
-        const listData = document.querySelector('.grocery-list[data-list="' + list + '"]');
-        if (listData) {
-          listData.innerHTML = '';
-        }
-      });
-    } else {
-      // Delete items from the selected list
-      const listData = JSON.parse(localStorage.getItem(listParam) || '[]');
-      const deletedItems = [];
-  
-      checkedItems.forEach((index) => {
-        const deletedItem = listData.splice(index - deletedItems.length, 1)[0];
-        deletedItems.push(deletedItem);
-  
-        const addToShoppingList = confirm(`Do you want to add "${deletedItem.name}" to the ShoppingListS?`);
-  
-        if (addToShoppingList) {
-          const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
-          shoppingListData.push(deletedItem);
-          localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
-        }
-      });
-  
-      localStorage.setItem(listParam, JSON.stringify(listData));
-  
-      const listDataElement = document.querySelector('.grocery-list[data-list="' + listParam + '"]');
-      if (listDataElement) {
-        listDataElement.innerHTML = '';
+    const deletedItems = [];
+
+    checkedItems.forEach((index) => {
+      if (index < fridgeListData.length) {
+        const deletedItem = fridgeListData.splice(index - deletedItems.length, 1)[0];
+        deletedItems.push({
+          list: 'FridgeListS',
+          item: deletedItem
+        });
+      } else if (index < fridgeListData.length + counterItemListData.length) {
+        const deletedItem = counterItemListData.splice(index - fridgeListData.length - deletedItems.length, 1)[0];
+        deletedItems.push({
+          list: 'CounterItemS',
+          item: deletedItem
+        });
+      } else if (index < fridgeListData.length + counterItemListData.length + pantryItemListData.length) {
+        const deletedItem = pantryItemListData.splice(index - fridgeListData.length - counterItemListData.length - deletedItems.length, 1)[0];
+        deletedItems.push({
+          list: 'PantryItemS',
+          item: deletedItem
+        });
+      } else {
+        const deletedItem = shoppingListData.splice(index - fridgeListData.length - counterItemListData.length - pantryItemListData.length - deletedItems.length, 1)[0];
+        deletedItems.push({
+          list: 'ShoppingListS',
+          item: deletedItem
+        });
       }
+    });
+
+    // update local storage with new lists
+    localStorage.setItem('FridgeListS', JSON.stringify(fridgeListData));
+    localStorage.setItem('CounterItemS', JSON.stringify(counterItemListData));
+    localStorage.setItem('PantryItemS', JSON.stringify(pantryItemListData));
+    localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
+
+    deletedItems.forEach((deletedItem) => {
+      const list = deletedItem.list;
+      const item = deletedItem.item;
+
+      const addToShoppingList = confirm(`Do you want to add "${item.name}" to the ShoppingListS?`);
+
+      if (addToShoppingList) {
+        const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
+        shoppingListData.push(item);
+        localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
+      }
+
+      const listData = document.querySelector('.grocery-list[data-list="' + list + '"]');
+      if (listData) {
+        listData.innerHTML = '';
+      }
+    });
+  } else {
+    // Delete items from the selected list
+    // const listData = JSON.parse(localStorage.getItem(listParam) || '[]');
+    const deletedItems = [];
+
+    checkedItems.forEach((index) => {
+      const deletedItem = listData.splice(index - deletedItems.length, 1)[0];
+      deletedItems.push(deletedItem);
+
+      const addToShoppingList = confirm(`Do you want to add "${deletedItem.name}" to the ShoppingListS?`);
+
+      if (addToShoppingList) {
+        const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
+        shoppingListData.push(deletedItem);
+        localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
+      }
+    });
+
+    localStorage.setItem(listParam, JSON.stringify(listData));
+
+    const listDataElement = document.querySelector('.grocery-list[data-list="' + listParam + '"]');
+    if (listDataElement) {
+      listDataElement.innerHTML = '';
     }
+  }
   
-    window.location.reload();
+    // window.location.reload();
   }
   
   function fetchVideoFeed() {
