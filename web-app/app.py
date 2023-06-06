@@ -38,7 +38,7 @@ class Item(BaseModel):
     expiredDate: str
 
 
-camera_id = 1   # default value is 0 if you only have one camera
+camera_id = 0   # default value is 0 if you only have one camera
 delay = 1
 
 bd = cv2.barcode.BarcodeDetector()
