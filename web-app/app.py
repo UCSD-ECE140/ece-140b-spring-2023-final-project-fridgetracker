@@ -195,22 +195,6 @@ def login_user(user: UserLogin):
     Camera and Barcode API
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-# detection_option = -1
-# qr_code = ""
-
-# def gen_frames():
-#     global detection_option, qr_code
-#     while True:
-#         success, frame = cap.read()  # use frame variable for other image processing     
-#         frame, qr_code = detect_barcodes(frame) # detect qr code
-#         if not success:
-#             break
-#         else:
-#             cv2.normalize(frame, frame, 50, 255, cv2.NORM_MINMAX) # adjust frame brightness
-#             ret, buffer = cv2.imencode('.jpg', frame)   # encode image into buffer
-#             frame = buffer.tobytes()
-#             yield (b'--frame\r\n'
-#                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 def gen_frames():
     global productdata, enable
@@ -249,11 +233,6 @@ def gen_frames():
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')  # Concatenate byte strings
 
-# GET index homepage
-# @app.get('/cam.html')
-# def index(request: Request):
-#     global qr_code
-#     return templates.TemplateResponse("cam.html", {"request": request, 'qr_code': qr_code})
 
 # GET request - basic video feed
 @app.get('/video_feed')
@@ -271,6 +250,62 @@ def scan_enabled():
     
     return {'product': productdata}
 
+
+
+
+# Run the FastAPI application
+if __name__ == '__main__':
+    import uvicorn
+
+    uvicorn.run(app, host='192.168.0.34', port=8000)
+
+
+
+
+
+
+
+
+
+
+
+
+######junkyard
+
+# detection_option = -1
+# qr_code = ""
+
+# def gen_frames():
+#     global detection_option, qr_code
+#     while True:
+#         success, frame = cap.read()  # use frame variable for other image processing     
+#         frame, qr_code = detect_barcodes(frame) # detect qr code
+#         if not success:
+#             break
+#         else:
+#             cv2.normalize(frame, frame, 50, 255, cv2.NORM_MINMAX) # adjust frame brightness
+#             ret, buffer = cv2.imencode('.jpg', frame)   # encode image into buffer
+#             frame = buffer.tobytes()
+#             yield (b'--frame\r\n'
+#                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+    # uvicorn.run(app, host='100.80.240.83', port=8000)
+    # uvicorn.run(
+    #     app,
+    #     host='192.168.0.34',
+    #     port=8000,
+    #     ssl_keyfile="key.pem",
+    #     ssl_certfile="cert.pem",
+    # )
+
+    # 100.80.240.83
+    # uvicorn.run(app, host='0.0.0.0', port=8000)
+    # uvicorn.run(app, host='192.168.1.245', port=8000)
+# GET index homepage
+# @app.get('/cam.html')
+# def index(request: Request):
+#     global qr_code
+#     return templates.TemplateResponse("cam.html", {"request": request, 'qr_code': qr_code})
 
 
 # new GET request that takes int detect_opt, shows the detected object video stream
@@ -384,22 +419,3 @@ def scan_enabled():
 
     # Return a response
     # return {'message': 'Barcode processed successfully'}
-
-
-# Run the FastAPI application
-if __name__ == '__main__':
-    import uvicorn
-
-    #uvicorn.run(app, host='192.168.0.38', port=8000)
-    # uvicorn.run(app, host='100.80.240.83', port=8000)
-    # uvicorn.run(
-    #     app,
-    #     host='192.168.0.34',
-    #     port=8000,
-    #     ssl_keyfile="key.pem",
-    #     ssl_certfile="cert.pem",
-    # )
-
-    # 100.80.240.83
-    uvicorn.run(app, host='0.0.0.0', port=8000)
-    # uvicorn.run(app, host='192.168.1.245', port=8000)
