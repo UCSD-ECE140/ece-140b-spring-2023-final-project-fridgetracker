@@ -88,25 +88,29 @@ function get_list_from_db(listName){
   .catch(error => console.error('Error:', error));
 }
 
-// helper function for deleting item
-// function deleteItem(itemName, listSection) {
-//   const confirmation = confirm(`Are you sure you want to delete ${itemName}?`);
-//   if (confirmation) {
-//     // const theItem = { 'item': itemName, 'section': listSelect };
-//     const theItem = { "listTage": listSection, "itemName":itemName, "addedDate": 0, "expiredDate":0};
-//     console.log(theItem);
-//     await server_request('/delete_item', theItem, 'DELETE', function () {
-//       alert(`${itemName} deleted from ${listSection}!`);
-//     });
-//   }
-// }
+
 async function deleteItem(itemName, listSection) {
   const confirmation = confirm(`Are you sure you want to delete ${itemName}?`);
   if (confirmation) {
-    const theItem = { "listTage": listSection, "itemName":itemName, "addedDate": 0, "expiredDate":0};
+
+    // create a new item object
+    var date = new Date();
+    date.setDate(new Date().getDate());
+    date = date.toISOString().substring(0, 10);    
+    const theItem = { "listTage": listSection, "itemName":itemName, "addedDate": date, "expiredDate":date};
     try {
+      // delete the item from the db
       await server_request('/delete_item', theItem, 'DELETE');
       alert(`${itemName} deleted from ${listSection}!`);
+
+      // add automatic shopping list functionality
+      const addtoshopping = confirm(`Do you want to add ${itemName} to your Shopping List?`);
+      if ( listSection != 'ShoppingListS' && addtoshopping){
+        const theShoppingItem = { ...theItem, listTage: "ShoppingListS" };
+        await server_request('/add_item', theShoppingItem, "POST", function(){
+          alert(`${itemName} added to ShoppingListS!`);
+        })
+      }
     } catch (error) {
       console.error('Error:', error);
     }
@@ -180,50 +184,6 @@ async function populateViewData() {
     location.reload();
   });
   
-  // if (listParam === 'All') {
-  //   // Delete items from individual lists
-  //   // local storage version
-  //   // const fridgeListData = JSON.parse(localStorage.getItem('FridgeListS') || '[]');
-  //   // const counterItemListData = JSON.parse(localStorage.getItem('CounterItemS') || '[]');
-  //   // const pantryItemListData = JSON.parse(localStorage.getItem('PantryItemS') || '[]');
-  //   // const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
-
-  //   const deletedItems = [];
-
-  //   checkedItems.forEach((index) => {
-  //     if (index < fridgeListData.length) {
-  //       const deletedItem = fridgeListData.splice(index - deletedItems.length, 1)[0];
-  //       deletedItems.push({
-  //         list: 'FridgeListS',
-  //         item: deletedItem
-  //       });
-  //     } else if (index < fridgeListData.length + counterItemListData.length) {
-  //       const deletedItem = counterItemListData.splice(index - fridgeListData.length - deletedItems.length, 1)[0];
-  //       deletedItems.push({
-  //         list: 'CounterItemS',
-  //         item: deletedItem
-  //       });
-  //     } else if (index < fridgeListData.length + counterItemListData.length + pantryItemListData.length) {
-  //       const deletedItem = pantryItemListData.splice(index - fridgeListData.length - counterItemListData.length - deletedItems.length, 1)[0];
-  //       deletedItems.push({
-  //         list: 'PantryItemS',
-  //         item: deletedItem
-  //       });
-  //     } else {
-  //       const deletedItem = shoppingListData.splice(index - fridgeListData.length - counterItemListData.length - pantryItemListData.length - deletedItems.length, 1)[0];
-  //       deletedItems.push({
-  //         list: 'ShoppingListS',
-  //         item: deletedItem
-  //       });
-  //     }
-  //   });
-
-  //   // update local storage with new lists
-  //   localStorage.setItem('FridgeListS', JSON.stringify(fridgeListData));
-  //   localStorage.setItem('CounterItemS', JSON.stringify(counterItemListData));
-  //   localStorage.setItem('PantryItemS', JSON.stringify(pantryItemListData));
-  //   localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
-
   //   deletedItems.forEach((deletedItem) => {
   //     const list = deletedItem.list;
   //     const item = deletedItem.item;
