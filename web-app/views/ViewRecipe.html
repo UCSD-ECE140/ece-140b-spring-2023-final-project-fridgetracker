@@ -24,6 +24,17 @@
     </div>
     <div class="grocery-list" data-index="0">
       <!-- append elements here -->
+      <!-- template form that items are added in -->
+      <template id="item_template">
+        <div class="item">
+          <div class="group1">
+            <input class="itemCheckbox" type="checkbox">
+            <input class="inputBox" type="text">
+            <input class="dateAdded" type="date">
+            <input class="dateExpire" type="date">
+          </div>
+        </div>
+      </template>
     </div>
   </form>
   <form></form>
@@ -35,7 +46,7 @@
       <img class="delete" src="../static/delete.png"></button>
   </div>
   <button class="updateButton" >Update</button>
-  <button class="backtorecipe" onclick="window.location.href='./HomeScreen.html'">Back to Main</button>
+  <button class="backtorecipe" onclick="window.location.href='/'">Back to Main</button>
 </div>
 <script>
   document.addEventListener("DOMContentLoaded", function(event) {

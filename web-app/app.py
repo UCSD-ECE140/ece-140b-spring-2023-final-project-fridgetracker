@@ -130,11 +130,12 @@ def add_item(item: Item) -> dict:
 # retrieve FridgeListS/CounterItemS/PantryItemS/ShoppingListS items list
 @app.get('/get_{category}_list')
 def get_category_list(category: str) -> list:
-    data = db.get_category(category)
-    if data:
-        return data
+    data = []
+    if (category == 'All'):
+        data = db.get_category()
     else:
-        return []
+        data = db.get_category(category)
+    return data
 
 
 @app.delete('/delete_item')
