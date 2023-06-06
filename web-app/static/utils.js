@@ -1,5 +1,5 @@
 // request function for handling interactions with the server
-// note: server_request has error when calling GET so use fetch instead
+// note: this has error when calling GET so use fetch instead
 function server_request(url, data = {}, verb, callback) {
   return fetch(url, {
       credentials: 'same-origin',
@@ -16,7 +16,7 @@ function server_request(url, data = {}, verb, callback) {
 }
 
 
-// add items to local storage connected to db using server routes
+// add items to local storage connected to db using server routes -- used by CreateRecipe.html
 function addItem() {
     // Get values entered in form
     const name = document.querySelector('input[name="ProductBrand"]').value;
@@ -47,7 +47,7 @@ function addItem() {
 }
 
 
-// populates homepage section lists with db data
+// populates homepage section lists with db data -- used by HomeScreen.html
 function populateData(){
   const sections = ['FridgeListS', 'CounterItemS', 'PantryItemS', 'ShoppingListS'];
   for (let i = 0; i < sections.length; i++) {
@@ -89,14 +89,27 @@ function get_list_from_db(listName){
 }
 
 // helper function for deleting item
-function deleteItem(itemName, listSelect) {
+// function deleteItem(itemName, listSection) {
+//   const confirmation = confirm(`Are you sure you want to delete ${itemName}?`);
+//   if (confirmation) {
+//     // const theItem = { 'item': itemName, 'section': listSelect };
+//     const theItem = { "listTage": listSection, "itemName":itemName, "addedDate": 0, "expiredDate":0};
+//     console.log(theItem);
+//     await server_request('/delete_item', theItem, 'DELETE', function () {
+//       alert(`${itemName} deleted from ${listSection}!`);
+//     });
+//   }
+// }
+async function deleteItem(itemName, listSection) {
   const confirmation = confirm(`Are you sure you want to delete ${itemName}?`);
   if (confirmation) {
-    const data = { listTage: listSelect, itemName: itemName };
-    server_request('/delete_item', data, 'DELETE', function () {
-      alert(`${itemName} deleted from ${listSelect}!`);
-      location.reload(); // Refresh the page
-    });
+    const theItem = { "listTage": listSection, "itemName":itemName, "addedDate": 0, "expiredDate":0};
+    try {
+      await server_request('/delete_item', theItem, 'DELETE');
+      alert(`${itemName} deleted from ${listSection}!`);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
 }
 
@@ -114,7 +127,7 @@ async function fetch_list(section) {
 }
 
 
-// populate individual/all sections in viewrecipe.html
+// populate individual/all sections in ViewRecipe.html
 async function populateViewData() {
   // get section name from url
   const urlParams = new URLSearchParams(window.location.search);
@@ -134,6 +147,7 @@ async function populateViewData() {
   listData.forEach(item => {
     // insert element into section list
     groceryListDiv.insertAdjacentHTML('beforeend', theItemTemplate.innerHTML);
+
     // update element with item information
     let newItem = groceryListDiv.lastElementChild;
     newItem.querySelector('.inputBox').value = item[0];
@@ -146,7 +160,7 @@ async function populateViewData() {
   // delete checked items functionality
   let checkedItems = [];
   const deleteButton = document.querySelector('.deleteButton');
-  deleteButton.addEventListener('click', () => {
+  deleteButton.addEventListener('click', async () => {
 
     // keep track of all checked items to delete
     const checkboxes = document.querySelectorAll('.itemCheckbox');
@@ -158,97 +172,100 @@ async function populateViewData() {
     });
   
     // delete the checked items
-    checkedItems.forEach((itemName) => {
-      deleteItem(itemName, listSelect);
-    });
+    for (const itemName of checkedItems){
+      await deleteItem(itemName, listParam);
+    }
+
+    // reload the page after the items are deleted
+    location.reload();
   });
   
-  if (listParam === 'All') {
-    // Delete items from individual lists
-    // local storage version
-    // const fridgeListData = JSON.parse(localStorage.getItem('FridgeListS') || '[]');
-    // const counterItemListData = JSON.parse(localStorage.getItem('CounterItemS') || '[]');
-    // const pantryItemListData = JSON.parse(localStorage.getItem('PantryItemS') || '[]');
-    // const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
+  // if (listParam === 'All') {
+  //   // Delete items from individual lists
+  //   // local storage version
+  //   // const fridgeListData = JSON.parse(localStorage.getItem('FridgeListS') || '[]');
+  //   // const counterItemListData = JSON.parse(localStorage.getItem('CounterItemS') || '[]');
+  //   // const pantryItemListData = JSON.parse(localStorage.getItem('PantryItemS') || '[]');
+  //   // const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
 
-    const deletedItems = [];
+  //   const deletedItems = [];
 
-    checkedItems.forEach((index) => {
-      if (index < fridgeListData.length) {
-        const deletedItem = fridgeListData.splice(index - deletedItems.length, 1)[0];
-        deletedItems.push({
-          list: 'FridgeListS',
-          item: deletedItem
-        });
-      } else if (index < fridgeListData.length + counterItemListData.length) {
-        const deletedItem = counterItemListData.splice(index - fridgeListData.length - deletedItems.length, 1)[0];
-        deletedItems.push({
-          list: 'CounterItemS',
-          item: deletedItem
-        });
-      } else if (index < fridgeListData.length + counterItemListData.length + pantryItemListData.length) {
-        const deletedItem = pantryItemListData.splice(index - fridgeListData.length - counterItemListData.length - deletedItems.length, 1)[0];
-        deletedItems.push({
-          list: 'PantryItemS',
-          item: deletedItem
-        });
-      } else {
-        const deletedItem = shoppingListData.splice(index - fridgeListData.length - counterItemListData.length - pantryItemListData.length - deletedItems.length, 1)[0];
-        deletedItems.push({
-          list: 'ShoppingListS',
-          item: deletedItem
-        });
-      }
-    });
+  //   checkedItems.forEach((index) => {
+  //     if (index < fridgeListData.length) {
+  //       const deletedItem = fridgeListData.splice(index - deletedItems.length, 1)[0];
+  //       deletedItems.push({
+  //         list: 'FridgeListS',
+  //         item: deletedItem
+  //       });
+  //     } else if (index < fridgeListData.length + counterItemListData.length) {
+  //       const deletedItem = counterItemListData.splice(index - fridgeListData.length - deletedItems.length, 1)[0];
+  //       deletedItems.push({
+  //         list: 'CounterItemS',
+  //         item: deletedItem
+  //       });
+  //     } else if (index < fridgeListData.length + counterItemListData.length + pantryItemListData.length) {
+  //       const deletedItem = pantryItemListData.splice(index - fridgeListData.length - counterItemListData.length - deletedItems.length, 1)[0];
+  //       deletedItems.push({
+  //         list: 'PantryItemS',
+  //         item: deletedItem
+  //       });
+  //     } else {
+  //       const deletedItem = shoppingListData.splice(index - fridgeListData.length - counterItemListData.length - pantryItemListData.length - deletedItems.length, 1)[0];
+  //       deletedItems.push({
+  //         list: 'ShoppingListS',
+  //         item: deletedItem
+  //       });
+  //     }
+  //   });
 
-    // update local storage with new lists
-    localStorage.setItem('FridgeListS', JSON.stringify(fridgeListData));
-    localStorage.setItem('CounterItemS', JSON.stringify(counterItemListData));
-    localStorage.setItem('PantryItemS', JSON.stringify(pantryItemListData));
-    localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
+  //   // update local storage with new lists
+  //   localStorage.setItem('FridgeListS', JSON.stringify(fridgeListData));
+  //   localStorage.setItem('CounterItemS', JSON.stringify(counterItemListData));
+  //   localStorage.setItem('PantryItemS', JSON.stringify(pantryItemListData));
+  //   localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
 
-    deletedItems.forEach((deletedItem) => {
-      const list = deletedItem.list;
-      const item = deletedItem.item;
+  //   deletedItems.forEach((deletedItem) => {
+  //     const list = deletedItem.list;
+  //     const item = deletedItem.item;
 
-      const addToShoppingList = confirm(`Do you want to add "${item.name}" to the ShoppingListS?`);
+  //     const addToShoppingList = confirm(`Do you want to add "${item.name}" to the ShoppingListS?`);
 
-      if (addToShoppingList) {
-        const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
-        shoppingListData.push(item);
-        localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
-      }
+  //     if (addToShoppingList) {
+  //       const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
+  //       shoppingListData.push(item);
+  //       localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
+  //     }
 
-      const listData = document.querySelector('.grocery-list[data-list="' + list + '"]');
-      if (listData) {
-        listData.innerHTML = '';
-      }
-    });
-  } else {
-    // Delete items from the selected list
-    // const listData = JSON.parse(localStorage.getItem(listParam) || '[]');
-    const deletedItems = [];
+  //     const listData = document.querySelector('.grocery-list[data-list="' + list + '"]');
+  //     if (listData) {
+  //       listData.innerHTML = '';
+  //     }
+  //   });
+  // } else {
+  //   // Delete items from the selected list
+  //   // const listData = JSON.parse(localStorage.getItem(listParam) || '[]');
+  //   const deletedItems = [];
 
-    checkedItems.forEach((index) => {
-      const deletedItem = listData.splice(index - deletedItems.length, 1)[0];
-      deletedItems.push(deletedItem);
+  //   checkedItems.forEach((index) => {
+  //     const deletedItem = listData.splice(index - deletedItems.length, 1)[0];
+  //     deletedItems.push(deletedItem);
 
-      const addToShoppingList = confirm(`Do you want to add "${deletedItem.name}" to the ShoppingListS?`);
+  //     const addToShoppingList = confirm(`Do you want to add "${deletedItem.name}" to the ShoppingListS?`);
 
-      if (addToShoppingList) {
-        const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
-        shoppingListData.push(deletedItem);
-        localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
-      }
-    });
+  //     if (addToShoppingList) {
+  //       const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
+  //       shoppingListData.push(deletedItem);
+  //       localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
+  //     }
+  //   });
 
-    localStorage.setItem(listParam, JSON.stringify(listData));
+  //   localStorage.setItem(listParam, JSON.stringify(listData));
 
-    const listDataElement = document.querySelector('.grocery-list[data-list="' + listParam + '"]');
-    if (listDataElement) {
-      listDataElement.innerHTML = '';
-    }
-  }
+  //   const listDataElement = document.querySelector('.grocery-list[data-list="' + listParam + '"]');
+  //   if (listDataElement) {
+  //     listDataElement.innerHTML = '';
+  //   }
+  // }
   
     // window.location.reload();
   }

@@ -118,8 +118,6 @@ def home_screen(request: Request):
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 # add an item (requests an item to be sent)
-
-
 @app.post('/add_item')
 def add_item(item: Item) -> dict:
     if db.add_item(item.listTage, item.itemName, item.addedDate, item.expiredDate):
@@ -138,10 +136,12 @@ def get_category_list(category: str) -> list:
     return data
 
 
+# delete an item given the item name(string) and the section(string)
 @app.delete('/delete_item')
 def delete_item(item: Item):
-    if db.delete_item(item.listTage):
-        return {'message': 'Item deleted.'}
+    print(item)
+    if db.delete_item(item.itemName, item.listTage):
+        return {'message': 'Item sucessfully deleted.'}
     return {'message': 'Item not deleted!'}
 
 

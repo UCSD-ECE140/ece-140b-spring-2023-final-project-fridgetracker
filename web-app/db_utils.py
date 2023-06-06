@@ -126,10 +126,21 @@ def add_item(section:str, item:str, added:str, expiry:str) -> int:
   return cursor.lastrowid # return item_id
 
 # DELETE item
-def delete_item(item:str) -> bool:
+def delete_item(item:str, category: str) -> bool:
   db = mysql.connect(**db_config)
   cursor = db.cursor()
-  cursor.execute(f"delete from kitchen01 where item={item};")
+  query = f"delete from kitchen01 where item='{item}' and section='{category}';"
+  print(query)
+  cursor.execute(query)
   db.commit()
   db.close()
   return True if cursor.rowcount == 1 else False
+
+# UPDATE item -- move to section or rename
+# def update_item(item:str, category:str, field:str, newdata:str) -> bool:
+#   db = mysql.connect(**db_config)
+#   cursor = db.cursor()
+#   # cursor.execute(f"delete from kitchen01 where item={item} and section={category};")
+#   db.commit()
+#   db.close()
+#   return True if cursor.rowcount == 1 else False
