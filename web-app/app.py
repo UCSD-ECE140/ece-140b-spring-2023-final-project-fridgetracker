@@ -44,7 +44,6 @@ delay = 1
 
 bd = cv2.barcode.BarcodeDetector()
 cap = cv2.VideoCapture(camera_id)
-# bd = cv2.barcode.BarcodeDetector()
 
 barcodes = [0]*5
 
