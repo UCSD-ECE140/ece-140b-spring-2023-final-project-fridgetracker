@@ -275,6 +275,39 @@ function fetchVideoFeed() {
     });
 }
   
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//      color them
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function toggleTheme() {
+  const root = document.documentElement;
+  const logoImg = document.querySelector('.fridgelogo');
+  const themeCheckbox = document.getElementById('theme-checkbox');
+
+  if (themeCheckbox.checked) { // Dark theme is selected
+    root.style.setProperty('--fridge-dark', '#000000');
+    root.style.setProperty('--fridge-medium-dark', '#333333');
+    root.style.setProperty('--fridge-medium', '#666666');
+    root.style.setProperty('--fridge-medium-light', '#999999');
+    root.style.setProperty('--fridge-light', '#CCCCCC');
+    root.style.setProperty('--fridge-Item', '#faeadc');
+    logoImg.src = '../static/img/logo_fr.jpg'; // Change the image source for dark mode
+  } else { // Light theme is selected
+    root.style.setProperty('--fridge-dark', '#37251b');
+    root.style.setProperty('--fridge-medium-dark', '#80411e');
+    root.style.setProperty('--fridge-medium', '#ad6e2f');
+    root.style.setProperty('--fridge-medium-light', '#d49961');
+    root.style.setProperty('--fridge-light', '#e4bc84');
+    root.style.setProperty('--fridge-Item', '#faeadc');
+    logoImg.src = '../static/img/logo.png'; // Change the image source for light mode
+  }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//     Junk yard
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // function fetchProductData(barcodeVal) {
 //   url = '/barcode'

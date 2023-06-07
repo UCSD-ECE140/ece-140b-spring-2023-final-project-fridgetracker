@@ -8,12 +8,17 @@
     <meta name="theme-color" content="#000000">
     <title>HomeScreen</title>
     <link rel="stylesheet" href="../static/css/homescreen.css">
+    <link rel="stylesheet" href="../static/css/toggle.css">
     <script src="../static/js/utils.js" defer></script>
   </head>
   <body onload="populateData()">
+    <label class="theme-switch" for="theme-checkbox">
+      <input type="checkbox" id="theme-checkbox" onchange="toggleTheme()" />
+      <span class="slider"></span>
+    </label>
     <div class="homescreen">
-      <div class="fridgelogo">
-        <img class="fridgelogo" src="../static/img/logo.png">
+      <div class="fridgelogo-container">
+        <img class="fridgelogo" src="../static/img/logo.png" alt ="Logo">
       </div>
       <div class="group1">
         <button class="AddCam" onclick="window.location.href='./cam.html'">
@@ -48,5 +53,8 @@
         <!-- append elements -->
       </div>
     </div>
+    <!-- <button  class="backtorecipe"  onclick="changeTheme('dark')">Dark Theme</button>
+    <button  class="backtorecipe"  onclick="changeTheme('light')">Light Theme</button> -->
+    
   </body>
 </html>

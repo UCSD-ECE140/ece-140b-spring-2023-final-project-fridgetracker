@@ -39,7 +39,14 @@ body {
   flex-direction: column;
   background-color: var(--fridge-dark);
 }
-.homescreen .fridgelogo {
+.homescreen .fridgelogo-container {
+  margin-bottom: 5%;
+  width:90%;
+  height: 100%;
+  /* background-color: var(--fridge-medium-light); */
+  border-radius: 2.4rem;
+  flex-shrink: 0;
+}.homescreen .fridgelogo {
   margin-bottom: 5%;
   width:90%;
   height: 100%;
@@ -256,4 +263,44 @@ body {
   border-radius: 0.5rem;
   margin-bottom: 1rem;
   font-size: 1.6rem;
+}
+
+.backtotecipe {
+  margin: 0 2rem;
+  width: 50%;
+  height: 100%;
+  cursor: pointer;
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 500;
+  line-height: 1.115;
+  color: var(--fridge-dark);
+  font-family: Comfortaa, 'Source Sans Pro';
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--fridge-light);
+  border-radius: 2.4rem;
+  flex-shrink: 0;
+}
+
+.backtorecipe {
+  margin: 0rem 2.5rem 5rem 2.5rem;
+  width: 100%;
+  height: 5.4rem;
+  cursor: pointer;
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1.115;
+  color: var(--fridge-dark);
+  font-family: Comfortaa, 'Source Sans Pro';
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--fridge-light);
+  border-radius: 2.4rem;
+  flex-shrink: 0;
 }

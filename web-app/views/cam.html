@@ -9,10 +9,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#000000">
         <link rel="stylesheet" href="../static/css/cam.css">
+    <link rel="stylesheet" href="../static/css/toggle.css">
+
         <script src="../static/js/utils.js" defer></script>
         <script src="../static/js/quagga.min.js"></script>
       </head>
-      <body>
+      <body>    
+        <label class="theme-switch" for="theme-checkbox">
+        <input type="checkbox" id="theme-checkbox" onchange="toggleTheme()" />
+        <span class="slider"></span>
+        </label>
         <h1>Camera</h1>
         <button class="camera" onclick="fetchVideoFeed()" alt="Camera">SCAN</button>
         <br>

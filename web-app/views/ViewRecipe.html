@@ -8,9 +8,15 @@
   <meta name="theme-color" content="#000000">
   <title>ViewRecipe</title>
   <link rel="stylesheet" href="../static/css/viewrecipe.css">
+  <link rel="stylesheet" href="../static/css/toggle.css">
+
   <script src="../static/js/utils.js" defer></script>
 </head>
 <body>
+  <label class="theme-switch" for="theme-checkbox">
+    <input type="checkbox" id="theme-checkbox" onchange="toggleTheme()" />
+    <span class="slider"></span>
+  </label>
 <div class="viewrecipe">
   <form>
     <input class="tiltle" value="" name="name">

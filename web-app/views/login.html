@@ -8,11 +8,17 @@
   <meta name="theme-color" content="#000000">
   <title>Login</title>
   <link rel="stylesheet" href="../static/css/login.css">
+  <link rel="stylesheet" href="../static/css/toggle.css">
+
   <script src="../static/js/login.js" defer></script>
 </head>
 <body>
+    <label class="theme-switch" for="theme-checkbox">
+        <input type="checkbox" id="theme-checkbox" onchange="toggleTheme()" />
+        <span class="slider"></span>
+      </label>
     <div class="fridgeheader">
-        <img class="fridgelogo" src="../static/img/logo.png">
+        <img class="fridgelogo" src="../static/img/logo.png" alt = "Logo">
         <br>
         <button id="register_btn">Register</button>
         <button id="login_btn">Login</button>

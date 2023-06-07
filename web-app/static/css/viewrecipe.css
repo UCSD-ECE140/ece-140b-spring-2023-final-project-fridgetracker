@@ -1,27 +1,4 @@
-:root {
-  --fridge-dark: #37251b;
-  --fridge-medium-dark: #80411e;
-  --fridge-medium: #ad6e2f;
-  --fridge-medium-light: #d49961;
-  --fridge-light: #e4bc84;
-  --fridge-item: #faeadc;
 
-  --tea-dark: #222f1d;
-  --tea-medium-dark: #2c3e26;
-  --tea-medium: #465f43;
-  --tea-medium-light: #607f60;
-  --tea-light: #c5e7b9;
-  --tea-item: #f1f9ee;
-}
-
-html { 
-  background:var(--fridge-item)no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-	font-size:62.5%;
-}
 * {
 
   font-family: Comfortaa;

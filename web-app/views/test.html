@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <title>Camera Streaming</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/css/toggle.css">
+
   </head>
   <body>
+    <label class="theme-switch" for="theme-checkbox">
+      <input type="checkbox" id="theme-checkbox" onchange="toggleTheme()" />
+      <span class="slider"></span>
+    </label>
     <h1>Camera Streaming</h1>
     <video id="camera-preview" autoplay></video>
     <script src="../static/js/script.js"></script>
