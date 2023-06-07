@@ -16,6 +16,25 @@ function server_request(url, data = {}, verb, callback) {
 }
 
 
+// onload function for CreateRecipe.html
+// checks device and handles barcode scanning/desktop manual adding
+function createRecipe(){
+  // Check if the device has a physical keyboard
+  const input = document.getElementById("myInput");
+  const hasPhysicalKeyboard = !(navigator.maxTouchPoints > 0 || window.matchMedia('(pointer: coarse)').matches);
+
+  if (hasPhysicalKeyboard) {
+    input.addEventListener("keydown", function(event) {
+      // Handle keydown event
+      console.log("Key pressed: " + event.key);
+    });
+    addItem();
+  } else {
+    // Code to open virtual keyboard or handle keyboard input in an alternative way
+    fetchVideoFeed();
+  }
+}
+
 // add items to local storage connected to db using server routes -- used by CreateRecipe.html
 function addItem() {
     // Get values entered in form
