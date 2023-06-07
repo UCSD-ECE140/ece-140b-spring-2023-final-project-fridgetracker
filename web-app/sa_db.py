@@ -34,15 +34,12 @@ cursor.execute("DROP TABLE IF EXISTS kitchen01;")
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS kitchen01 (
     item_id integer AUTO_INCREMENT PRIMARY KEY,
-    item          VARCHAR(16) NOT NULL,
+    item          LONGTEXT NOT NULL,
     section       VARCHAR(16) NOT NULL,
     added         timestamp NOT NULL,
     expiry        timestamp NOT NULL
 );
 """)
-cursor.execute("INSERT INTO kitchen01 (section, item, added, expiry) VALUES ('fridge', 'eggs', '2023-05-18 10:00:00', '2023-05-25 10:00:00')")
-cursor.execute("INSERT INTO kitchen01 (section, item, added, expiry) VALUES ('fridge', 'rice', '2023-05-18 10:00:00', '2023-05-25 10:00:00')")
-cursor.execute("INSERT INTO kitchen01 (section, item, added, expiry) VALUES ('fridge', 'bacon', '2023-05-18 10:00:00', '2023-05-25 10:00:00')")
 
 db.commit()
 db.close()

@@ -26,7 +26,7 @@ try:
    cursor.execute("""
    CREATE TABLE Sessions (
        sessionId VARCHAR(32) NOT NULL PRIMARY KEY,
-       username VARCHAR(30) NOT NULL,
+       email VARCHAR(30) NOT NULL,
        timeCreated datetime
     );
     """)

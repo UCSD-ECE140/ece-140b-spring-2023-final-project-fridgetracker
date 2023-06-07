@@ -43,6 +43,10 @@ function hideButtons(){
     theRegisterBtn.style.display = 'none';
     theLoginBtn.style.display = 'none';
 }
+function logout(){
+    fetch ('/logout')
+    .catch(error => console.error('Error:', error));
+}
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 /* Handle Form Data from Registration/Login */
@@ -56,8 +60,13 @@ theRegForm.addEventListener('submit', (event) => {
     const method = theRegForm.getAttribute("method");
     const newUserInfo = Object.fromEntries(new FormData(theRegForm).entries());
     server_request(action, newUserInfo, method, function(response){
-        alert(`Welcome ${response['first_name']}, please login to continue.`);
-        toggleSignUp();
+        if (response['status'] == 'error'){
+            alert('Sorry, there was an error with your registration. Please try again.');
+        }
+        else {
+            alert(`Welcome ${response['first_name']}, please login to continue.`);
+            toggleSignUp();
+        }
     });
 })
 
@@ -69,8 +78,14 @@ theLoginForm.addEventListener('submit', (event) => {
     const method = theLoginForm.getAttribute("method");
     const loginCredentials = Object.fromEntries(new FormData(theLoginForm).entries());
     console.log(loginCredentials);
-    window.location.href = "/mvp_update";
-    server_request(action, loginCredentials, method, function() {
+    server_request(action, loginCredentials, method, function(response) {
         // redirect to profile/dashboard
+        if (response['status'] == 'success'){
+            window.location.replace('/');
+        }
+        else {
+            console.log(response);
+            alert('Sorry, there was an error with your login. Please try again.');
+        }
     })
 })

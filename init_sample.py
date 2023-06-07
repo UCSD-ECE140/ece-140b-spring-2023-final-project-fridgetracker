@@ -43,12 +43,7 @@ try:
         expiry        timestamp NOT NULL
     );
     """)
-    cursor.execute(
-        "insert into kitchen01 (section, item, added, expiry) value ('fridge', 'eggs', '2023-05-18 10:00:00', '2023-05-25 10:00:00')")
-    cursor.execute(
-        "insert into kitchen01 (section, item, added, expiry) value ('fridge', 'rice', '2023-05-18 10:00:00', '2023-05-25 10:00:00')")
-    cursor.execute(
-        "insert into kitchen01 (section, item, added, expiry) value ('fridge', 'bacon', '2023-05-18 10:00:00', '2023-05-25 10:00:00')")
+    
 except RuntimeError as err:
     print("runtime error: {0}".format(err))
 

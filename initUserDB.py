@@ -27,8 +27,8 @@ try:
    CREATE TABLE Users (
        firstname VARCHAR(20) NOT NULL,
        lastname VARCHAR(30) NULL,
-       username VARCHAR(30) NOT NULL PRIMARY KEY,
-       password VARCHAR(30) NOT NULL
+       email VARCHAR(30) NOT NULL PRIMARY KEY,
+       password BINARY(60) NOT NULL
     );
     """)
    db.commit()

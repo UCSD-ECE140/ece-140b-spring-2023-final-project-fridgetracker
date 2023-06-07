@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles       # for serving static files
 # for generating HTML from templatized files
@@ -13,6 +13,7 @@ import db_utils as db
 import requests
 import cv2
 import time
+import secrets
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -42,10 +43,10 @@ camera_id = 0   # default value is 0 if you only have one camera
 delay = 1
 
 cap = cv2.VideoCapture(camera_id)
+# bd = cv2.barcode.BarcodeDetector()
 
 barcodes = [0]*5
 
-# frame = 0
 enable = 0
 
 
@@ -71,49 +72,65 @@ enable = 0
 def get_homescreen(request: Request) -> HTMLResponse:
     # with open("views/HomeScreen.html") as html:
     #     return HTMLResponse(content=html.read())
-    items = db.get_category('')
-    return views.TemplateResponse("HomeScreen.html", {"request": request, "items": items})
+    session = request.cookies.get('session_id')
+    if (session and db.select_session(session)):
+        items = db.get_category('')
+        return views.TemplateResponse("HomeScreen.html", {"request": request, "items": items})
+    return RedirectResponse(url='/login.html')
 
 
 @app.get("/ViewRecipe.html", response_class=HTMLResponse)
-def get_viewrecipe() -> HTMLResponse:
-    with open("views/ViewRecipe.html") as html:
-        return HTMLResponse(content=html.read())
+def get_viewrecipe(request: Request) -> HTMLResponse:
+    session = request.cookies.get('session_id')
+    if (session and db.select_session(session)):
+        with open("views/ViewRecipe.html") as html:
+            return HTMLResponse(content=html.read())
+    return RedirectResponse(url='/login.html')
 
 
 @app.get("/ViewRecipe.html/{section}", response_class=HTMLResponse)
 def get_viewrecipe(request: Request, section: str):
-    return views.TemplateResponse("views/ViewRecipe.html", {"request": request, "section": section})
-
+    session = request.cookies.get('session_id')
+    if (session and db.select_session(session)):
+        return views.TemplateResponse("views/ViewRecipe.html", {"request": request, "section": section})
+    return RedirectResponse(url='/login.html')
 
 @app.get("/CreateRecipe.html", response_class=HTMLResponse)
-def get_createrecipe() -> HTMLResponse:
-    with open("views/CreateRecipe.html") as html:
-        return HTMLResponse(content=html.read())
+def get_createrecipe(request:Request) -> HTMLResponse:
+    session = request.cookies.get('session_id')
+    if (session and db.select_session(session)):
+        with open("views/CreateRecipe.html") as html:
+            return HTMLResponse(content=html.read())
+    return RedirectResponse(url='/login.html')
 
 
 @app.get("/cam.html", response_class=HTMLResponse)
 def get_camera(request: Request):
-    return views.TemplateResponse("cam.html", {"request": request})
+    session = request.cookies.get('session_id')
+    if (session and db.select_session(session)):
+       return views.TemplateResponse("cam.html", {"request": request})
+    return RedirectResponse(url='/login.html')
 
 
-@app.get("/test.html", response_class=HTMLResponse)
-def get_camera():
-    with open("views/test.html") as html:
-        return HTMLResponse(content=html.read())
+# @app.get("/test.html", response_class=HTMLResponse)
+# def get_camera():
+#     with open("views/test.html") as html:
+#         return HTMLResponse(content=html.read())
 
 
 @app.get("/HomeScreen.html", response_class=HTMLResponse)
 def home_screen(request: Request):
-    return views.TemplateResponse("/HomeScreen.html", {"request": request})
+    session = request.cookies.get('session_id')
+    if (session and db.select_session(session)):
+        return views.TemplateResponse("/HomeScreen.html", {"request": request})
+    return RedirectResponse(url='/login.html')
 
 
 @app.get("/login.html", response_class=HTMLResponse)
 def login_html(request: Request):
-    return views.TemplateResponse("/login.html", {"request": request})
-
-@app.get("/login", response_class=HTMLResponse)
-def login_page(request: Request):
+    session = request.cookies.get('session_id')
+    if (session and db.select_session(session)):
+        return RedirectResponse(url='/')
     return views.TemplateResponse("/login.html", {"request": request})
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -170,38 +187,53 @@ class UserRegistration(BaseModel):
     first_name: str
     last_name: str
     email: str
-    user: str
     pwd: str
-    kitchen_id: int
-    user_role: int
 
-
-@app.post('/register_user')
-def register_user(user: UserRegistration):
-    # Encrypt password here on the server
-    pwd = bcrypt.hashpw(user.pwd.encode('utf-8'), bcrypt.gensalt())
-    if db.create_user(user.first_name, user.last_name, user.email, user.user, pwd, user.kitchen_id, user.user_role):
-        return {'message': 'User registered.'}
-    return {'message': 'User not registered!'}
-
-
-# TODO: Login user
 class UserLogin(BaseModel):
-    username: str
+    email: str
     password: str
 
 
-@app.post('/login_user')
-def login_user(user: UserLogin):
-    # Retrieve user data from the database using user.username
-    user_data = db.get_user(user.username)
-    if user_data:
-        hashed_password = user_data['password']
-        if bcrypt.checkpw(user.password.encode('utf-8'), hashed_password.encode('utf-8')):
-            # Redirect to HomeScreen.html
-            return RedirectResponse(url='views/HomeScreen.html')
-    raise HTTPException(status_code=401, detail='Invalid username or password')
+# @app.post('/register_user')
+# def register_user(user: UserRegistration):
+#     # Encrypt password here on the server
+#     pwd = bcrypt.hashpw(user.pwd.encode('utf-8'), bcrypt.gensalt())
+#     if db.create_user(user.first_name, user.last_name, user.email, user.user, pwd, user.kitchen_id, user.user_role):
+#         return {'message': 'User registered.'}
+#     return {'message': 'User not registered!'}
 
+# @app.post('/login_user')
+# def login_user(user: UserLogin):
+#     # Retrieve user data from the database using user.username
+#     user_data = db.get_user(user.username)
+#     if user_data:
+#         hashed_password = user_data['password']
+#         if bcrypt.checkpw(user.password.encode('utf-8'), hashed_password.encode('utf-8')):
+#             # Redirect to HomeScreen.html
+#             return RedirectResponse(url='views/HomeScreen.html')
+#     raise HTTPException(status_code=401, detail='Invalid username or password')
+
+@app.get('/logout', response_class=RedirectResponse)
+async def get_home(request:Request, response:Response) -> HTMLResponse:
+  session = request.cookies.get('session_id')
+  if (session and db.select_session(session)):
+    if(db.delete_session(session)):
+      response.delete_cookie(key='session_id')
+  return RedirectResponse('/login.html')
+
+@app.post('/login')
+async def post_login(visitor:UserLogin, response:Response):
+  if(db.check_user_password(visitor.email,visitor.password)):
+    session_id = secrets.token_hex(16)
+    if (db.create_session(session_id, visitor.email)):
+      response.set_cookie(key='session_id', value=session_id)
+      return {'status': 'success'}
+    return {'status': 'error'}
+  return {'status': 'wrong credentials'}
+
+@app.post('/register')
+def post_registration(user:UserRegistration):
+    return {'status': 'success', 'first_name': user.first_name} if db.create_user(user.first_name,user.last_name,user.email,bcrypt.hashpw(user.pwd.encode('utf-8'), bcrypt.gensalt())) else {'status': 'error'}
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -270,7 +302,7 @@ def scan_enabled():
 if __name__ == '__main__':
     import uvicorn
 
-    uvicorn.run(app, host='192.168.0.34', port=8000)
+    uvicorn.run(app, host='100.80.247.53', port=8000)
 
 
 

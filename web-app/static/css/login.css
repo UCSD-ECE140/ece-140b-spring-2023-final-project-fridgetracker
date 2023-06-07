@@ -8,3 +8,14 @@
     position: absolute;
     padding: 50px 150px;
 }
+
+#register text, 
+#register label,
+#register p,
+#register h2,
+#login text, 
+#login label ,
+#login p,
+#login h2 {
+    color: lightgrey;
+}

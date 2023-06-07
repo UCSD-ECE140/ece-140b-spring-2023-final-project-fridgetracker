@@ -33,48 +33,146 @@ class Item(BaseModel):
 # CREATE, SELECT, UPDATE, DELETE
 
 # User registration
-# CREATE user (user and kitchen profile (if setup))
-def create_user(first_name:str, last_name:str, email:str, user:str, pwd:str, kitchen_id:int, user_role:int) -> int:
-  pwd_encoded = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
+# # CREATE user (user and kitchen profile (if setup))
+# def create_user(first_name:str, last_name:str, email:str, user:str, pwd:str, kitchen_id:int, user_role:int) -> int:
+#   pwd_encoded = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
+#   db = mysql.connect(**db_config)
+#   cursor = db.cursor()
+#   query = "insert into User_Registry (first_name, last_name, email, user, pwd, kitchen_id, user_role) values (%s, %s, %s, %s, %s, %s, %s, %s)"
+#   values = (first_name, last_name, email, user, pwd_encoded, kitchen_id, user_role)
+#   cursor.execute(query, values)
+#   db.commit()
+#   db.close()
+#   return cursor.lastrowid
+
+# # initialize kitchen with first user signup
+# def init_kitchen(kitchen_id:int) -> int:
+#   return False
+
+# # User login (authentification)
+# # TODO: sessions
+# def login_user(username: str, password: str) -> bool:
+#     db = mysql.connect(**db_config)
+#     cursor = db.cursor()
+#     cursor.execute("SELECT pwd FROM User_Registry WHERE user = %s", (username,))
+#     result = cursor.fetchone()
+#     db.close()
+    
+#     if result and bcrypt.checkpw(password.encode('utf-8'), result[0].encode('utf-8')):
+#         session['username'] = username
+#         return True
+    
+#     return False
+
+# # Verify if a user is logged in
+# def is_user_logged_in() -> bool:
+#     return 'username' in session
+
+# # Get the currently logged-in user's username
+# def get_logged_in_user() -> str:
+#     return session.get('username', None)
+
+# # Logout the user
+# def logout_user() -> None:
+#     session.pop('username', None)
+
+# CREATE SQL query
+def create_user(firstname:str, lastname:str, email:str, password:str) -> bool:
+  try:
+    db = mysql.connect(**db_config)
+    cursor = db.cursor()
+    query = "insert into Users (firstname, lastname, email, password) values (%s, %s, %s, %s)"
+    values = (firstname, lastname, email, password)
+    cursor.execute(query, values)
+    db.commit()
+    db.close()
+
+  except Exception:
+    print("Error:", e)
+    return False
+
+  return True
+
+# SELECT SQL query
+def select_user(email:str) -> tuple:
   db = mysql.connect(**db_config)
   cursor = db.cursor()
-  query = "insert into User_Registry (first_name, last_name, email, user, pwd, kitchen_id, user_role) values (%s, %s, %s, %s, %s, %s, %s, %s)"
-  values = (first_name, last_name, email, user, pwd_encoded, kitchen_id, user_role)
+  query = f"select firstname, lastname, email from Users where email={email};"
+  cursor.execute(query)
+  result = cursor.fetchone()
+  db.close()
+  return result
+
+# UPDATE SQL query
+def update_user(firstname:str, lastname:str, email:str, password:str) -> bool:
+  db = mysql.connect(**db_config)
+  cursor = db.cursor()
+  query = "update Users set firstname=%s, lastname=%s, password=%s where email=`%s`;"
+  values = (firstname, lastname, password, email)
   cursor.execute(query, values)
   db.commit()
   db.close()
-  return cursor.lastrowid
+  return True if cursor.rowcount == 1 else False
 
-# initialize kitchen with first user signup
-def init_kitchen(kitchen_id:int) -> int:
+# DELETE SQL query
+def delete_user(email:str) -> bool:
+  db = mysql.connect(**db_config)
+  cursor = db.cursor()
+  cursor.execute(f"delete from users where email={email};")
+  db.commit()
+  db.close()
+  return True if cursor.rowcount == 1 else False
+
+# SELECT query to verify password of users
+def check_user_password(email:str, password:str) -> bool:
+  db = mysql.connect(**db_config)
+  print('checking')
+  cursor = db.cursor()
+  query = 'select password from Users where email=%s'
+  cursor.execute(query, (email,))
+  result = cursor.fetchone()
+  cursor.close()
+  db.close()
+
+  if result is not None:
+    return True if bcrypt.checkpw(password.encode('utf-8'), bytes(result[0])) else False
   return False
 
-# User login (authentification)
-# TODO: sessions
-def login_user(username: str, password: str) -> bool:
+# CREATE SQL query
+def create_session(sessionId:str, email:str) -> bool:
+  try:
     db = mysql.connect(**db_config)
     cursor = db.cursor()
-    cursor.execute("SELECT pwd FROM User_Registry WHERE user = %s", (username,))
-    result = cursor.fetchone()
+    query = "insert into Sessions (sessionId, email, timeCreated) values (%s, %s, %s)"
+    values = (sessionId, email, datetime.utcnow())
+    cursor.execute(query, values)
+    db.commit()
     db.close()
-    
-    if result and bcrypt.checkpw(password.encode('utf-8'), result[0].encode('utf-8')):
-        session['username'] = username
-        return True
-    
+
+  except Exception as e:
+    print("Error:", e)
     return False
 
-# Verify if a user is logged in
-def is_user_logged_in() -> bool:
-    return 'username' in session
+  return True
 
-# Get the currently logged-in user's username
-def get_logged_in_user() -> str:
-    return session.get('username', None)
+# SELECT SQL query
+def select_session(sessionId:str) -> tuple:
+  db = mysql.connect(**db_config)
+  cursor = db.cursor()
+  query = f"select * from Sessions where sessionId='{sessionId}';"
+  cursor.execute(query)
+  result = cursor.fetchone()
+  db.close()
+  return result
 
-# Logout the user
-def logout_user() -> None:
-    session.pop('username', None)
+# DELETE SQL query
+def delete_session(sessionId:str) -> bool:
+  db = mysql.connect(**db_config)
+  cursor = db.cursor()
+  cursor.execute(f"delete from Sessions where sessionId='{sessionId}';")
+  db.commit()
+  db.close()
+  return True if cursor.rowcount == 1 else False
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 # Kitchen access (authorization)

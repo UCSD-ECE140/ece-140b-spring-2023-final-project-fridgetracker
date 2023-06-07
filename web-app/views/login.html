@@ -32,11 +32,11 @@
             <label for="last_name">Last Name:</label><br>
             <input type="text" name="last_name" id="last_name" required><br>
             <label for="email">Email:</label><br>
-            <input type="email" name="email" id="email" required><br>
-            <label for="user_reg">Username:</label><br>
-            <input type="text" name="user_reg" id="user_reg" required><br>
+            <input type="email" name="email" id="email_reg" required><br>
+            <!-- <label for="user_reg">Username:</label><br>
+            <input type="text" name="user_reg" id="user_reg" required><br> -->
             <label for="pass_reg">Password:</label><br>
-            <input type="password" name="pass_reg" id="pass_reg" required><br><br>
+            <input type="password" name="pwd" id="pwd" required><br><br>
             <input class="submit" type="submit" value="Register">
         </form><br>
         <button id="reg_to_log" onclick="toggleSignUp()">Already have an account? Login</button>
@@ -45,10 +45,10 @@
         <form id="login_form" action="/login" method="POST">
             <h2>Login</h2>
             <p>Login to access the rest of the site.</p>
-            <label for="user_log">Username:</label><br>
-            <input type="text" name="user_log" id="user_log" required><br>
-            <label for="pass_log">Password:</label><br>
-            <input type="password" name="pass_log" id="pass_log" required><br><br>
+            <label for="email">Email:</label><br>
+            <input type="text" name="email" id="email_log" required><br>
+            <label for="password">Password:</label><br>
+            <input type="password" name="password" id="password" required><br><br>
             <input class="submit" type="submit" value="Login">
         </form><br>
         <button id="log_to_rec" onclick="toggleSignUp()">Don't have an account? Register</button>
