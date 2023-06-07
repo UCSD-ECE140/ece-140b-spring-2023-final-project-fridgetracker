@@ -43,10 +43,6 @@ function hideButtons(){
     theRegisterBtn.style.display = 'none';
     theLoginBtn.style.display = 'none';
 }
-function logout(){
-    fetch ('/logout')
-    .catch(error => console.error('Error:', error));
-}
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 /* Handle Form Data from Registration/Login */
