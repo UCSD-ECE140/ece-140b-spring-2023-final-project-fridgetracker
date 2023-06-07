@@ -42,6 +42,7 @@ class Item(BaseModel):
 camera_id = 0   # default value is 0 if you only have one camera
 delay = 1
 
+bd = cv2.barcode.BarcodeDetector()
 cap = cv2.VideoCapture(camera_id)
 # bd = cv2.barcode.BarcodeDetector()
 
