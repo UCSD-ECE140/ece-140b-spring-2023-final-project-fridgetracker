@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="icon" href="../static/logo_fr.jpg">
+  <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>Login</title>
+  <link rel="stylesheet" href="../static/login.css">
+  <script src="../static/login.js" defer></script>
+</head>
+<body>
+    <div class="fridgeheader">
+        <img class="fridgelogo" src="../static/logo.png">
+        <br>
+        <button id="register_btn">Register</button>
+        <button id="login_btn">Login</button>
+    </div>
+    <div id="register">
+        <h2>Register</h2>
+        <p>Create an account to access all features.</p>
+        <form id="register_form" action="/register" method="POST">
+            <label for="first_name">First Name:</label><br>
+            <input type="text" name="first_name" id="first_name" required><br>
+            <label for="last_name">Last Name:</label><br>
+            <input type="text" name="last_name" id="last_name" required><br>
+            <label for="email">Email:</label><br>
+            <input type="email" name="email" id="email" required><br>
+            <label for="user_reg">Username:</label><br>
+            <input type="text" name="user_reg" id="user_reg" required><br>
+            <label for="pass_reg">Password:</label><br>
+            <input type="password" name="pass_reg" id="pass_reg" required><br><br>
+            <input class="submit" type="submit" value="Register">
+        </form><br>
+        <button id="reg_to_log" onclick="toggleSignUp()">Already have an account? Login</button>
+    </div>
+    <div id="login">
+        <form id="login_form" action="/login" method="POST">
+            <h2>Login</h2>
+            <p>Login to access the rest of the site.</p>
+            <label for="user_log">Username:</label><br>
+            <input type="text" name="user_log" id="user_log" required><br>
+            <label for="pass_log">Password:</label><br>
+            <input type="password" name="pass_log" id="pass_log" required><br><br>
+            <input class="submit" type="submit" value="Login">
+        </form><br>
+        <button id="log_to_rec" onclick="toggleSignUp()">Don't have an account? Register</button>
+    </div>
+</body>
+</html>

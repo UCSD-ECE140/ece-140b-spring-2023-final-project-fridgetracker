@@ -25,12 +25,12 @@ app = FastAPI()
 
 # mount the static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # specify where the HTML files are located
 views = Jinja2Templates(directory='views')
 templates = Jinja2Templates(directory="templates")
+
 # Define a Pydantic model for the item data
-
-
 class Item(BaseModel):
     listTage: str
     itemName: str
@@ -41,7 +41,6 @@ class Item(BaseModel):
 camera_id = 0   # default value is 0 if you only have one camera
 delay = 1
 
-bd = cv2.barcode.BarcodeDetector()
 cap = cv2.VideoCapture(camera_id)
 
 barcodes = [0]*5
@@ -103,13 +102,19 @@ def get_camera():
     with open("views/test.html") as html:
         return HTMLResponse(content=html.read())
 
-# Render the HomeScreen.html template
-
 
 @app.get("/HomeScreen.html", response_class=HTMLResponse)
 def home_screen(request: Request):
     return views.TemplateResponse("/HomeScreen.html", {"request": request})
 
+
+@app.get("/login.html", response_class=HTMLResponse)
+def login_html(request: Request):
+    return views.TemplateResponse("/login.html", {"request": request})
+
+@app.get("/login", response_class=HTMLResponse)
+def login_page(request: Request):
+    return views.TemplateResponse("/login.html", {"request": request})
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 

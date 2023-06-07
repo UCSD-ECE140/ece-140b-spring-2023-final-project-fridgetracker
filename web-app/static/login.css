@@ -1,0 +1,10 @@
+.fridgeheader {
+    text-align: center;
+}
+
+#register, #login {
+    text-align: center;
+    display: none;
+    position: absolute;
+    padding: 50px 150px;
+}
