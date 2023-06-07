@@ -144,7 +144,6 @@ def get_category_list(category: str) -> list:
 # delete an item given the item name(string) and the section(string)
 @app.delete('/delete_item')
 def delete_item(item: Item):
-    print(item)
     if db.delete_item(item.itemName, item.listTage):
         return {'message': 'Item sucessfully deleted.'}
     return {'message': 'Item not deleted!'}
@@ -153,7 +152,6 @@ def delete_item(item: Item):
 # update an item given an old item(Item) and new item(Item)
 @app.put('/update_item')
 def update_item(oldItem:Item, newItem:Item):
-    print(newItem, oldItem)
     if db.update_item(oldItem.itemName, oldItem.listTage, newItem.itemName, newItem.addedDate, newItem.expiredDate):
         return {'message': 'Item updated successfully.'}
     return {'message': 'Item not updated!'}

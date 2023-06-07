@@ -57,7 +57,7 @@ function addItem() {
     // add item to db using fetch/server requests
     server_request('/add_item', theItem, 'POST', function(){
       alert(`${name} added to ${listSelect}!`);
-      
+
       // Redirect home
       window.location.href = '/';
     })
@@ -100,7 +100,11 @@ function get_list_from_db(listName){
       const div = document.createElement('div');
       div.classList.add(listClass);
       expiry = item[2].substring(0, 10);
-      div.textContent = `${item[0]},  Expiry at ${expiry}`;
+      if (listName != 'ShoppingListS'){
+        div.textContent = `${item[0]},  Expiry at ${expiry}`;
+      } else {
+        div.textContent = `${item[0]}`; //
+      }
       listDiv.appendChild(div);
     });
   })
