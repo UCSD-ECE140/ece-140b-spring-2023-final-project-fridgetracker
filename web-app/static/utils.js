@@ -56,19 +56,9 @@ function addItem() {
 
     // add item to db using fetch/server requests
     server_request('/add_item', theItem, 'POST', function(){
-      
-      // next 3 lines are local storage, remove later
-      // Get the existing list of items for the selected list
-      const items = JSON.parse(localStorage.getItem(listSelect)) || [];
-    
-      // Add the new item to the list
-      items.push({ name, dateAdded, dateExpire });
-    
-      // Save the updated list to localStorage
-      localStorage.setItem(listSelect, JSON.stringify(items));
-    
-      // Redirect home
       alert(`${name} added to ${listSelect}!`);
+      
+      // Redirect home
       window.location.href = '/';
     })
 }
@@ -83,7 +73,6 @@ function populateData(){
   for (let i = 0; i < sections.length; i++) {
     get_list_from_db(sections[i]);
   }
-  console.log('homepage section lists populated with db data.');
 }
 
 // helper function to get list from db and add elements.
