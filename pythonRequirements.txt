@@ -6,3 +6,4 @@ mysql-connector-python
 flask
 bcrypt
 requests
+opencv-contrib-python

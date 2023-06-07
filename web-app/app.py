@@ -5,9 +5,9 @@ from fastapi.staticfiles import StaticFiles       # for serving static files
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-import mysql.connector
-from dotenv import load_dotenv
-import os
+# import mysql.connector
+# from dotenv import load_dotenv
+# import os
 import bcrypt
 import db_utils as db
 import requests
