@@ -103,7 +103,7 @@ function get_list_from_db(listName){
       if (listName != 'ShoppingListS'){
         div.textContent = `${item[0]},  Expiry at ${expiry}`;
       } else {
-        div.textContent = `${item[0]}`; //
+        div.textContent = `${item[0]}`; // shopping list shouldnt have expiry dates
       }
       listDiv.appendChild(div);
     });
@@ -128,15 +128,16 @@ async function deleteItem(itemName, listSection) {
     try {
       // delete the item from the db
       await server_request('/delete_item', theItem, 'DELETE');
-      alert(`${itemName} deleted from ${listSection}!`);
+      // alert(`${itemName} deleted from ${listSection}!`);
 
       // add automatic shopping list functionality
-      const addtoshopping = confirm(`Do you want to add ${itemName} to your Shopping List?`);
-      if ( listSection != 'ShoppingListS' && addtoshopping){
-        const theShoppingItem = { ...theItem, listTage: "ShoppingListS" };
-        await server_request('/add_item', theShoppingItem, "POST", function(){
-          alert(`${itemName} added to ShoppingListS!`);
-        })
+      if (listSection != 'ShoppingListS'){
+        if (confirm(`Do you want to add ${itemName} to your Shopping List?`)){
+          const theShoppingItem = { ...theItem, listTage: "ShoppingListS" };
+          await server_request('/add_item', theShoppingItem, "POST", function(){
+            alert(`${itemName} added to ShoppingListS!`);
+          })
+        }
       }
     } catch (error) {
       console.error('Error:', error);
@@ -159,6 +160,7 @@ async function fetch_list(section) {
 
 // helper function to compare two items for update
 async function compare_items(item1, item2){
+  // console.log(item1, item2);
   if (item1 != item2){
     await server_request('/update_item', {'oldItem': item1, 'newItem': item2}, 'PUT', function(){});
   }
@@ -189,9 +191,9 @@ async function populateViewData() {
     let newItem = groceryListDiv.lastElementChild;
     newItem.querySelector('.inputBox').value = item[0];
     newItem.querySelector('.dateAdded').value = item[1].slice(0, 10);
-    if (listParam !== 'ShoppingListS'){
-      newItem.querySelector('.dateExpire').value = item[2].slice(0, 10);
-    }
+    // if (listParam !== 'ShoppingListS'){
+    newItem.querySelector('.dateExpire').value = item[2].slice(0, 10);
+    // }
   });
 
   // delete checked items functionality
