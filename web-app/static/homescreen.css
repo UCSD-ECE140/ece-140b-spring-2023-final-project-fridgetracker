@@ -84,13 +84,13 @@ body {
   align-items: center;
   font-weight: bold;
   line-height: 1.115;
-  color: var(--fridge-light);
+  color: var(--fridge-dark);
   font-family: Comfortaa, 'Source Sans Pro';
   white-space: nowrap;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--fridge-medium);
+  background-color: var(--fridge-light);
   border-radius: 2.4rem;
   flex-shrink: 0;
 }
@@ -110,8 +110,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--fridge-medium);
-  /* border-radius: 1rem; */
+  background-color: var(--fridge-light);
+  border-radius: 2.4rem;
+
 }
 
 .homescreen .FridgeList, 
