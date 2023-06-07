@@ -89,11 +89,11 @@ def verify_user(user:int, kitchen_id:int) -> bool:
 # currently running on a local server with test kitchen so not implemented yet
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-# CREATE category (Fridge, freezer, pantry, counter, etc.) -- TODO: determine if still needed
+# CREATE section (Fridge, freezer, pantry, counter, etc.) -- TODO: determine if still needed
 def create_category(kitchen_id:int, section:str) -> bool:
   return False
 
-# SELECT category - for accessing lists
+# SELECT section - for accessing lists
 # def get_category(kitchen_id:int, section:str) -> list:
 def get_category(section:str='') -> list:
   db = mysql.connect(**db_config)
@@ -109,8 +109,8 @@ def get_category(section:str='') -> list:
   db.close()
   return result # result contains item, added, expiry
 
-# UPDATE category - for renaming categories...
-# DELETE category - delete a category and all the food items...
+# UPDATE section - for renaming categories...
+# DELETE section - delete a section and all the food items...
 
 # TODO: verify timestamps from server -> db
 def add_item(section:str, item:str, added:str, expiry:str) -> int:
@@ -126,22 +126,20 @@ def add_item(section:str, item:str, added:str, expiry:str) -> int:
   return cursor.lastrowid # return item_id
 
 # DELETE item
-def delete_item(item:str, category: str) -> bool:
+def delete_item(item:str, section: str) -> bool:
   db = mysql.connect(**db_config)
   cursor = db.cursor()
-  query = f"delete from kitchen01 where item='{item}' and section='{category}';"
-  print(query)
+  query = f"delete from kitchen01 where item='{item}' and section='{section}';"
   cursor.execute(query)
   db.commit()
   db.close()
   return True if cursor.rowcount == 1 else False
 
-# UPDATE item -- move to section or rename
-def update_item(itemName:str, category:str, newName:str, newAdd:str, newExpire:str) -> bool:
+# UPDATE item -- rename or change add/expiration dates
+def update_item(itemName:str, section:str, newName:str, newAdd:str, newExpire:str) -> bool:
   db = mysql.connect(**db_config)
   cursor = db.cursor()
-  query = f"update kitchen01 set item='{newName}', added='{newAdd}', expiry='{newExpire}' where item='{itemName}' and section='{category}'"
-  print(query)
+  query = f"update kitchen01 set item='{newName}', added='{newAdd}', expiry='{newExpire}' where item='{itemName}' and section='{section}'"
   cursor.execute(query)
   db.commit()
   db.close()
