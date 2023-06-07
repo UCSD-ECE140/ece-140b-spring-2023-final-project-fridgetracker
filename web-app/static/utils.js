@@ -88,7 +88,7 @@ function get_list_from_db(listName){
   .catch(error => console.error('Error:', error));
 }
 
-
+// helper function to delete item and add to shopping list
 async function deleteItem(itemName, listSection) {
   const confirmation = confirm(`Are you sure you want to delete ${itemName}?`);
   if (confirmation) {
@@ -117,7 +117,7 @@ async function deleteItem(itemName, listSection) {
   }
 }
 
-// helper function for fetch get route
+// helper function for fetch GET route
 async function fetch_list(section) {
   let listData = [];
   try {
@@ -130,6 +130,12 @@ async function fetch_list(section) {
   return listData;
 }
 
+// helper function to compare two items for update
+async function compare_items(item1, item2){
+  if (item1 != item2){
+    await server_request('/update_item', {'oldItem': item1, 'newItem': item2}, 'PUT', function(){});
+  }
+}
 
 // populate individual/all sections in ViewRecipe.html
 async function populateViewData() {
@@ -183,98 +189,61 @@ async function populateViewData() {
     // reload the page after the items are deleted
     location.reload();
   });
+
+  // add update button functionality
+  const updateButton = document.querySelector('.updateButton');
+  updateButton.addEventListener('click', async () => {
+
+    // get item elements from page
+    const items = document.querySelectorAll('.grocery-list .item');
+
+    // compare the items
+    // items.forEach((item, index) => {
+    for (const [index, item] of items.entries()) {
+
+      // get old item data
+      const theItem = listData[index];
+      let oldName = theItem[0];
+      let oldAdded = theItem[1].substring(0, 10);
+      let oldExpiry = theItem[2].substring(0, 10);
+
+      // get updated item data: name, dateAdded, and dateExpire
+      const updatedNameElement = item.querySelector('.inputBox');
+      const updatedName = updatedNameElement ? updatedNameElement.value : '';
+      const updatedDateAddedElement = item.querySelector('.dateAdded');
+      const updatedAdded = updatedDateAddedElement ? updatedDateAddedElement.value : '';
+      const updatedDateExpireElement = item.querySelector('.dateExpire');
+      const updatedExpire = updatedDateExpireElement ? updatedDateExpireElement.value : '';
+
+      // create items for easier comparison
+      const theOldItem = { "listTage": listParam, "itemName":oldName, "addedDate": oldAdded, "expiredDate":oldExpiry};
+      const theNewItem = { "listTage": listParam, "itemName":updatedName, "addedDate": updatedAdded, "expiredDate":updatedExpire};
+      
+      // compare item information-- if any fields changed, then send server_request to update item
+      await compare_items(theOldItem, theNewItem);
+    }
+
+    // reload the page after all items are checked and updated
+    window.location.reload();
+  });
+}
   
-  //   deletedItems.forEach((deletedItem) => {
-  //     const list = deletedItem.list;
-  //     const item = deletedItem.item;
-
-  //     const addToShoppingList = confirm(`Do you want to add "${item.name}" to the ShoppingListS?`);
-
-  //     if (addToShoppingList) {
-  //       const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
-  //       shoppingListData.push(item);
-  //       localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
-  //     }
-
-  //     const listData = document.querySelector('.grocery-list[data-list="' + list + '"]');
-  //     if (listData) {
-  //       listData.innerHTML = '';
-  //     }
-  //   });
-  // } else {
-  //   // Delete items from the selected list
-  //   // const listData = JSON.parse(localStorage.getItem(listParam) || '[]');
-  //   const deletedItems = [];
-
-  //   checkedItems.forEach((index) => {
-  //     const deletedItem = listData.splice(index - deletedItems.length, 1)[0];
-  //     deletedItems.push(deletedItem);
-
-  //     const addToShoppingList = confirm(`Do you want to add "${deletedItem.name}" to the ShoppingListS?`);
-
-  //     if (addToShoppingList) {
-  //       const shoppingListData = JSON.parse(localStorage.getItem('ShoppingListS') || '[]');
-  //       shoppingListData.push(deletedItem);
-  //       localStorage.setItem('ShoppingListS', JSON.stringify(shoppingListData));
-  //     }
-  //   });
-
-  //   localStorage.setItem(listParam, JSON.stringify(listData));
-
-  //   const listDataElement = document.querySelector('.grocery-list[data-list="' + listParam + '"]');
-  //   if (listDataElement) {
-  //     listDataElement.innerHTML = '';
-  //   }
-  // }
+function fetchVideoFeed() {
+  fetch('/enable_scan')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      const queryString = Object.keys(data)
+        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+        .join('&');
+      const redirectUrl = '/CreateRecipe.html?' + queryString;
+      window.location.href = redirectUrl;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
   
-    // window.location.reload();
-  }
-  
-  function fetchVideoFeed() {
-    fetch('/enable_scan')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        const queryString = Object.keys(data)
-          .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-          .join('&');
-        const redirectUrl = '/CreateRecipe.html?' + queryString;
-        window.location.href = redirectUrl;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
-// this is giving an error
-// const updateButton = document.querySelector('.updateButton');
-// updateButton.addEventListener('click', () => {
-//   let listData = JSON.parse(localStorage.getItem(listParam) || '[]');
-//   console.log('Retrieved listData:', listData);
-
-//   const items = document.querySelectorAll('.grocery-list .item');
-//   console.log(items);
-
-//   items.forEach((item, index) => {
-//     const updatedNameElement = item.querySelector('.inputBox');
-//     const updatedName = updatedNameElement ? updatedNameElement.value : '';
-
-//     const updatedDateAddedElement = item.querySelector('.dateAdded');
-//     const updatedDateAdded = updatedDateAddedElement ? updatedDateAddedElement.value : '';
-
-//     const updatedDateExpireElement = item.querySelector('.dateExpire');
-//     const updatedDateExpire = updatedDateExpireElement ? updatedDateExpireElement.value : '';
-
-//     listData[index].name = updatedName;
-//     listData[index].dateAdded = updatedDateAdded;
-//     listData[index].dateExpire = updatedDateExpire;
-//   });
-
-//   console.log('Updated listData:', listData);
-
-//   localStorage.setItem(listParam, JSON.stringify(listData));
-
-//   window.location.reload();
-// // });
 
 // function fetchProductData(barcodeVal) {
 //   url = '/barcode'

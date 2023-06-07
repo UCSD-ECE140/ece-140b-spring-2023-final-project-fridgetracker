@@ -145,6 +145,15 @@ def delete_item(item: Item):
     return {'message': 'Item not deleted!'}
 
 
+# update an item given an old item(Item) and new item(Item)
+@app.put('/update_item')
+def update_item(oldItem:Item, newItem:Item):
+    print(newItem, oldItem)
+    if db.update_item(oldItem.itemName, oldItem.listTage, newItem.itemName, newItem.addedDate, newItem.expiredDate):
+        return {'message': 'Item updated successfully.'}
+    return {'message': 'Item not updated!'}
+
+
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     Login/Registration
