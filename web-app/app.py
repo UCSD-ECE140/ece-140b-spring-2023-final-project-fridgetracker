@@ -5,9 +5,9 @@ from fastapi.staticfiles import StaticFiles       # for serving static files
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-# import mysql.connector
-# from dotenv import load_dotenv
-# import os
+import mysql.connector
+from dotenv import load_dotenv
+import os
 import bcrypt
 import db_utils as db
 import requests
@@ -48,16 +48,6 @@ cap = cv2.VideoCapture(camera_id)
 barcodes = [0]*5
 
 enable = 0
-
-
-# def gen_frames():
-#     if enable:
-#         cv2.normalize(frame, frame, 50, 255, cv2.NORM_MINMAX)
-#         ret, buffer = cv2.imencode('.jpg', frame)
-#         frame = buffer.tobytes()
-#         yield (b'--frame\r\n'
-#                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -192,26 +182,6 @@ class UserRegistration(BaseModel):
 class UserLogin(BaseModel):
     email: str
     password: str
-
-
-# @app.post('/register_user')
-# def register_user(user: UserRegistration):
-#     # Encrypt password here on the server
-#     pwd = bcrypt.hashpw(user.pwd.encode('utf-8'), bcrypt.gensalt())
-#     if db.create_user(user.first_name, user.last_name, user.email, user.user, pwd, user.kitchen_id, user.user_role):
-#         return {'message': 'User registered.'}
-#     return {'message': 'User not registered!'}
-
-# @app.post('/login_user')
-# def login_user(user: UserLogin):
-#     # Retrieve user data from the database using user.username
-#     user_data = db.get_user(user.username)
-#     if user_data:
-#         hashed_password = user_data['password']
-#         if bcrypt.checkpw(user.password.encode('utf-8'), hashed_password.encode('utf-8')):
-#             # Redirect to HomeScreen.html
-#             return RedirectResponse(url='views/HomeScreen.html')
-#     raise HTTPException(status_code=401, detail='Invalid username or password')
 
 @app.get('/logout', response_class=RedirectResponse)
 async def get_home(request:Request, response:Response) -> HTMLResponse:
