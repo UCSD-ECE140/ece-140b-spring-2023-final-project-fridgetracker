@@ -12,7 +12,7 @@ from datetime import datetime                     # to provide time and date
 from pydantic import BaseModel                    # to accept Items from server
 # from flask import session
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-# Configuration - TODO: figure out how pi will access credentials?
+# Configuration
 load_dotenv('credentials.env')             # Read in the environment variables for MySQL
 db_config = {
   "host": os.environ['MYSQL_HOST'],

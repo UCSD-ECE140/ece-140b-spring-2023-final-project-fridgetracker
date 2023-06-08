@@ -34,5 +34,9 @@
 #login label ,
 #login p,
 #login h2 {
-    color: lightgrey;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.115;
+    color: var(--fridge-dark);
+    font-family: Comfortaa, 'Source Sans Pro';
 }
