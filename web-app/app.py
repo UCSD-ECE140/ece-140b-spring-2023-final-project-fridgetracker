@@ -286,9 +286,10 @@ def video_feed():
 
 @app.get('/enable_scan')
 def scan_enabled():
-    global productdata, enable 
+    global productdata, enable, barcodes
     enable = 1
     productdata = 0
+    barcodes = [0,1,2,3,4]
 
     while (productdata == 0):
         time.sleep(1)
