@@ -1,38 +1,93 @@
 :root {
-    --fridge-dark: #37251b;
-    --fridge-medium-dark: #80411e;
-    --fridge-medium: #ad6e2f;
-    --fridge-medium-light: #d49961;
-    --fridge-light: #e4bc84;
-    --fridge-milk: #faeadc;
-  }
-  
-  html { 
-    background: var(--fridge-dark) no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    font-size: 62.5%;
-  }
+  --fridge-dark: #37251b;
+  --fridge-medium-dark: #80411e;
+  --fridge-medium: #ad6e2f;
+  --fridge-medium-light: #d49961;
+  --fridge-light: #e4bc84;
+  --fridge-Item: #faeadc;
+}
+
+html {
+  background: var(--fridge-dark) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  font-size: 62.5%;
+}
+
 .fridgeheader {
-    text-align: center;
+  text-align: center;
+  padding: auto;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--fridge-Item);
 }
 
-#register, #login {
-    text-align: center;
-    display: none;
-    position: absolute;
-    padding: 50px 150px;
+.fridgeheader .fridgelogo {
+  margin-bottom: 5%;
+  width: 75%;
+  height: 35%;
+  border-radius: 2.4rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+.fridgeheader form{
+  /* margin-right: 25%; */
+  align-items: center;
+  justify-content: center;
+}
+.fridgeheader button {
+  margin-bottom: 2rem;
+  height: 3.2rem;
+  width: 55%;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: var(--fridge-Item);
+  background-color: var(--fridge-medium);
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
 }
 
-#register text, 
+.fridgeheader h2 {
+  font-size: 2.4rem;
+  color: var(--fridge-medium);
+  margin-bottom: 1.6rem;
+}
+
+.fridgeheader p {
+  font-size: 1.6rem;
+  color: var(--fridge-light);
+  margin-bottom: 1.6rem;
+}
+
+#register,
+#login {
+  text-align: center;
+  display: none;
+  position: absolute;
+  padding: 5% 10%;
+  width: 75%;
+}
+
+#register text,
 #register label,
 #register p,
 #register h2,
-#login text, 
-#login label ,
+#login text,
+#login label,
 #login p,
 #login h2 {
-    color: lightgrey;
+  font-size: 1.6rem;
+  font-weight: bold;
+  line-height: 1.115;
+  color: var(--fridge-dark);
+  font-family: Comfortaa, 'Source Sans Pro';
 }

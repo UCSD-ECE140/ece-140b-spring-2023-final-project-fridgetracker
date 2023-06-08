@@ -35,7 +35,7 @@
     height: auto;
   }
   
-  .homescreen {
+  .fridgeheader {
     box-sizing: border-box;
     padding: 5% 5% 5% 5%;
     width: 100%;
@@ -47,7 +47,7 @@
     background-color: var(--fridge-dark);
   }
   
-  .homescreen .fridgelogo {
+  .fridgeheader .fridgelogo {
     margin-bottom: 5%;
     width: 75%;
     height: 35%;
@@ -56,8 +56,8 @@
     flex-shrink: 0;
   }
   
-  .homescreen .login-form,
-  .homescreen .create-user-form {
+  .fridgeheader .login-form,
+  .fridgeheader .create-user-form {
     margin-bottom: 15%;
     width: 50%;
     height: auto;
@@ -69,7 +69,7 @@
     padding: 1.6rem;
 }
 
-.homescreen .inputBox {
+.fridgeheader .inputBox {
 
 margin-bottom: 2rem;
 height: 2rem;
@@ -79,7 +79,7 @@ background-color: var(--fridge-light);
 border-radius: 0.8rem;
 }
 
-.homescreen button {
+.fridgeheader button {
 margin-bottom: 2rem;
 height: 3.2rem;
 font-size: 1.6rem;
@@ -91,38 +91,38 @@ border-radius: 0.1rem;
 cursor: pointer;
 }
 
-.homescreen .line1 {
+.fridgeheader .line1 {
 margin-bottom: 5%;
 width: 100%;
 height: 0.2rem;
 background-color: var(--fridge-medium-dark);
 }
 
-.homescreen .create-user-form input:last-child {
+.fridgeheader .create-user-form input:last-child {
 margin-bottom: 2rem;
 }
 
-.homescreen .create-user-btn {
+.fridgeheader .create-user-btn {
 margin-top: 1.2rem;
 align-self: flex-end;
 }
 
 @media screen and (max-width: 600px) {
-.homescreen .fridgelogo {
+.fridgeheader .fridgelogo {
   width: 90%;
   height: 30%;
 }
 
-.homescreen .login-form,
-.homescreen .create-user-form {
+.fridgeheader .login-form,
+.fridgeheader .create-user-form {
   width: 80%;
 }
 
-.homescreen input {
+.fridgeheader input {
   font-size: 1.4rem;
 }
 
-.homescreen button {
+.fridgeheader button {
   font-size: 2rem;
 }
 }

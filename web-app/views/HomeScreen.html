@@ -12,10 +12,13 @@
     <script src="../static/js/utils.js" defer></script>
   </head>
   <body onload="populateData()">
-    <label class="theme-switch" for="theme-checkbox">
-      <input type="checkbox" id="theme-checkbox" onchange="toggleTheme()" />
-      <span class="slider"></span>
-    </label>
+    <div class="header">
+      <label class="theme-switch" for="theme-checkbox">
+        <input type="checkbox" id="theme-checkbox" onchange="toggleTheme()" />
+        <span class="slider"></span>
+      </label>
+      <button class="backtorecipe" onclick="logout()">Logout</button>
+    </div>
     <div class="homescreen">
       <div class="fridgelogo-container">
         <img class="fridgelogo" src="../static/img/logo.png" alt ="Logo">
@@ -55,7 +58,5 @@
     </div>
     <!-- <button  class="backtorecipe"  onclick="changeTheme('dark')">Dark Theme</button>
     <button  class="backtorecipe"  onclick="changeTheme('light')">Light Theme</button> -->
-    
-    <button class="backtorecipe" onclick="logout()">Logout</button>
   </body>
 </html>

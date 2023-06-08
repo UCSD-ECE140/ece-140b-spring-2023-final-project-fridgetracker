@@ -179,10 +179,6 @@ def update_item(oldItem:Item, newItem:Item):
     Login/Registration
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-# Login/Registration
-
-
 class UserRegistration(BaseModel):
     first_name: str
     last_name: str
@@ -192,26 +188,6 @@ class UserRegistration(BaseModel):
 class UserLogin(BaseModel):
     email: str
     password: str
-
-
-# @app.post('/register_user')
-# def register_user(user: UserRegistration):
-#     # Encrypt password here on the server
-#     pwd = bcrypt.hashpw(user.pwd.encode('utf-8'), bcrypt.gensalt())
-#     if db.create_user(user.first_name, user.last_name, user.email, user.user, pwd, user.kitchen_id, user.user_role):
-#         return {'message': 'User registered.'}
-#     return {'message': 'User not registered!'}
-
-# @app.post('/login_user')
-# def login_user(user: UserLogin):
-#     # Retrieve user data from the database using user.username
-#     user_data = db.get_user(user.username)
-#     if user_data:
-#         hashed_password = user_data['password']
-#         if bcrypt.checkpw(user.password.encode('utf-8'), hashed_password.encode('utf-8')):
-#             # Redirect to HomeScreen.html
-#             return RedirectResponse(url='views/HomeScreen.html')
-#     raise HTTPException(status_code=401, detail='Invalid username or password')
 
 @app.get('/logout', response_class=RedirectResponse)
 async def get_home(request:Request, response:Response) -> HTMLResponse:
@@ -304,6 +280,7 @@ if __name__ == '__main__':
     import uvicorn
 
     uvicorn.run(app, host='100.80.247.53', port=8000)
+    # uvicorn.run(app, host='0.0.0.0', port=8000)
 
 
 
